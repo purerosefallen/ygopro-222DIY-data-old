@@ -44,6 +44,7 @@ function c1200031.thfilter(c,att,rec)
 	return c:IsSetCard(0xfba) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and (c:IsAttribute(att) or c:IsRace(rec))
 end
 function c1200031.scop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if not e:GetHandler():IsRelateToEffect(e) then return false end
 	if not Duel.IsExistingMatchingCard(c1200031.scfilter,tp,LOCATION_HAND,0,1,nil) then return false end
 	local g=Duel.SelectMatchingCard(tp,c1200031.scfilter,tp,LOCATION_HAND,0,1,1,nil)
 	local tc=g:GetFirst()
@@ -74,6 +75,7 @@ function c1200031.spfilter(c,e,tp,atk)
 	return c:IsSetCard(0xfba) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetAttack()<atk
 end
 function c1200031.spop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if not e:GetHandler():IsRelateToEffect(e) then return false end
 	if not Duel.IsExistingMatchingCard(c1200031.spcfilter,tp,LOCATION_MZONE,0,1,nil) then return false end
 	local g=Duel.SelectMatchingCard(tp,c1200031.spcfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	local tc=g:GetFirst()

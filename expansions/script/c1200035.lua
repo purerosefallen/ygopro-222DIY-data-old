@@ -55,6 +55,7 @@ function c1200035.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c1200035.activate(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return false end
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(c1200035.filter1,nil,e)
 	if Duel.IsExistingMatchingCard(c1200035.cfilter,tp,0,LOCATION_MZONE,1,nil) then

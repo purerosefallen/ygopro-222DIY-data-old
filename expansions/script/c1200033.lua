@@ -77,6 +77,7 @@ function c1200033.ttarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,0,1,tp,LOCATION_DECK)
 end
 function c1200033.toperation(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return false end
 	local tc=Duel.GetFirstTarget()
 	if not Duel.IsExistingMatchingCard(c1200033.tgfilter,tp,LOCATION_DECK,0,1,nil) then return false end
 	local g=Duel.SelectMatchingCard(tp,c1200033.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
