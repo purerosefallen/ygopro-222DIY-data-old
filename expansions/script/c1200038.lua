@@ -33,8 +33,8 @@ function c1200038.cfilter(c)
 	return c:IsSetCard(0xfba) and c:IsReleasable()
 end
 function c1200038.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1200037.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
-	local cg=Duel.SelectMatchingCard(tp,c1200037.cfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(c1200038.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
+	local cg=Duel.SelectMatchingCard(tp,c1200038.cfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 	Duel.Release(cg,REASON_COST)
 end
 function c1200038.indfilter(c)

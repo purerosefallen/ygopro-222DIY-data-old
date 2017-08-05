@@ -104,9 +104,10 @@ function c1200021.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()
 	local dc=Duel.GetAttacker()
 	if not tc then return false end
-	if tc:IsControler(tp) and tc:IsSetCard(0xfba) then 
-		local dc=Duel.GetAttackTarget()
-		local tc=Duel.GetAttacker()
+	if tc:IsControler(tp) and tc:IsSetCard(0xfba) then
+		local sc=tc
+		tc=dc
+		dc=sc
 	end
 	if Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)>0 and Duel.IsExistingMatchingCard(c1200021.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) and dc:IsDestructable() then
 		if Duel.SelectYesNo(tp,aux.Stringid(1200021,2)) then
