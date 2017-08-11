@@ -41,7 +41,17 @@ function c17060876.initial_effect(c)
 	e5:SetValue(c17060876.raval)
 	c:RegisterEffect(e5)
 end
+c17060876.is_named_with_Mercenary_Arthur=1
+c17060876.is_named_with_Regal_Arthur=1
 c17060876.is_named_with_Million_Arthur=1
+function c17060876.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
+end
+function c17060876.IsRegal_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Regal_Arthur
+end
 function c17060876.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

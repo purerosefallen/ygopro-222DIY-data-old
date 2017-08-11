@@ -34,10 +34,10 @@ function c13254115.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(tp,3)
 	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil)==3
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
-	local rg=g:Filter(Card.IsSetCard,nil,0x356)
+	local sg=g:Filter(Card.IsSetCard,nil,0x356)
+	local rg=g:Sub(sg)
 	Duel.DisableShuffleCheck()
-	Duel.Remove(rg,POS_FACEUP,REASON_COST)
-	rg=g:Sub(rg)
+	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 	Duel.Remove(rg,POS_FACEDOWN,REASON_COST)
 end
 function c13254115.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -48,7 +48,7 @@ function c13254115.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
 end
 function c13254115.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=c13254115.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local g=Duel.GetFirstTarget()
 	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 end

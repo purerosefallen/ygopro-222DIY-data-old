@@ -50,28 +50,44 @@ end
 function c33700130.mfilter2(c)
 	return c:IsFusionSetCard(0x443) and c:IsType(TYPE_MONSTER)
 end
-function c33700130.spfilter1(c,tp)
-	return c:IsFusionSetCard(0x443) and c:IsFusionType(TYPE_SYNCHRO) and c:IsAbleToGraveAsCost() and c:IsCanBeFusionMaterial()
-		and Duel.IsExistingMatchingCard(c33700130.spfilter2,tp,LOCATION_MZONE,0,1,c)
+function c33700130.cfilter(c,tp)
+	return (c33700130.mfilter1(c) or c33700130.mfilter2(c) and c:IsType(TYPE_MONSTER))
+		and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost() and (c:IsControler(tp) or c:IsFaceup())
 end
-function c33700130.spfilter2(c)
-	return c:IsFusionSetCard(0x443) and c:IsAbleToGraveAsCost() and c:IsCanBeFusionMaterial()
+function c33700130.fcheck(c,sg)
+	return c33700130.mfilter1(c) and sg:FilterCount(c33700130.fcheck2,c)+1==sg:GetCount()
+end
+function c33700130.fcheck2(c)
+	return c33700130.mfilter2(c) and c:IsType(TYPE_MONSTER)
+end
+function c33700130.fgoal(c,tp,sg)
+	return sg:GetCount()>1 and Duel.GetLocationCountFromEx(tp,tp,sg)>0 and sg:IsExists(c33700130.fcheck,1,nil,sg)
+end
+function c33700130.fselect(c,tp,mg,sg)
+	sg:AddCard(c)
+	local res=c33700130.fgoal(c,tp,sg) or mg:IsExists(c33700130.fselect,1,sg,tp,mg,sg)
+	sg:RemoveCard(c)
+	return res
 end
 function c33700130.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-5
-		and Duel.IsExistingMatchingCard(c33700130.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp)
+	local mg=Duel.GetMatchingGroup(c33700130.cfilter,tp,LOCATION_ONFIELD,0,nil,tp)
+	local sg=Group.CreateGroup()
+	return mg:IsExists(c33700130.fselect,1,nil,tp,mg,sg)
 end
 function c33700130.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectMatchingCard(tp,c33700130.spfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	local g2=Duel.GetMatchingGroup(c33700130.spfilter2,tp,LOCATION_MZONE,0,g1:GetFirst())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g3=g2:Select(tp,1,g2:GetCount(),nil)
-	g1:Merge(g3)
-	c:SetMaterial(g1)
-	Duel.SendtoGrave(g1,REASON_COST)
+	local mg=Duel.GetMatchingGroup(c33700130.cfilter,tp,LOCATION_ONFIELD,0,nil,tp)
+	local sg=Group.CreateGroup()
+	while true do
+		local cg=mg:Filter(c33700130.fselect,sg,tp,mg,sg)
+		if cg:GetCount()==0
+			or (c33700130.fgoal(c,tp,sg) and not Duel.SelectYesNo(tp,210)) then break end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=cg:Select(tp,1,1,nil)
+		sg:Merge(g)
+	end
+	Duel.SendtoGrave(sg,REASON_COST)
 end
 function c33700130.indcon(e)
 	return e:GetHandler():GetAttack()<e:GetHandler():GetDefense()

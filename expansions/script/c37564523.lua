@@ -18,10 +18,10 @@ function cm.initial_effect(c)
 end
 function cm.filter(c,e,tp)
 	return c:IsFaceup() and c:IsCode(37564765) and c:IsAbleToGrave()
-		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp,c:GetOriginalCode()) and bit.band(c:GetType(),0x8020d0+TYPE_LINK)~=0 and Senya.CheckSummonLocation(c,tp)
+		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp,c:GetOriginalCode()) and bit.band(c:GetType(),0x8020d0+TYPE_LINK)~=0
 end
 function cm.spfilter(c,e,tp,code)
-	return c.Senya_desc_with_nanahira and c:GetOriginalCode()~=code and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c.Senya_desc_with_nanahira and c:GetOriginalCode()~=code and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Senya.CheckSummonLocation(c,tp)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc,e,tp) end

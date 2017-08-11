@@ -4,7 +4,7 @@ local cm=_G["c"..m]
 xpcall(function() require("expansions/script/c57300000") end,function() require("script/c57300000") end)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	Senya.CommonEffect_3L(c,m)
+	--Senya.CommonEffect_3L(c,m)
 	Senya.AddSummonMusic(c,m*16+2,SUMMON_TYPE_LINK)
 	aux.AddLinkProcedure(c,Senya.check_set_3L,3,4)
 	local e0=Effect.CreateEffect(c)

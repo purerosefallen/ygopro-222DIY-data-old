@@ -99,9 +99,10 @@ function c13254051.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local tg=Duel.SelectMatchingCard(tp,c13254051.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil)
-	if tg:GetCount()~=0 and Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)==1 then
-		Duel.HintSelection(tg)
-		local at=tg:GetFirst():GetAttack()
+	if tg:GetCount()==0 then return end
+	local at=tg:GetFirst():GetAttack()
+	Duel.HintSelection(tg)
+	if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)==1 then
 		if at>0 then
 			Duel.Damage(1-tp,at,REASON_EFFECT)
 		end

@@ -43,10 +43,15 @@ function c17060871.initial_effect(c)
 	
 end
 c17060871.is_named_with_God_Equipment=1
+c17060871.is_named_with_Mercenary_Arthur=1
 c17060871.is_named_with_Million_Arthur=1
 function c17060871.God_Equipment(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_God_Equipment
+end
+function c17060871.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
 end
 function c17060871.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]

@@ -36,8 +36,13 @@ function c17060818.initial_effect(c)
 	e3:SetOperation(c17060818.activate)
 	c:RegisterEffect(e3)
 end
+c17060818.is_named_with_Mercenary_Arthur=1
 c17060818.is_named_with_Million_Arthur=1
 c17060818.is_named_with_Dark_Degenerate=1
+function c17060818.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
+end
 function c17060818.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

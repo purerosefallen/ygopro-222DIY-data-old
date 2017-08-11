@@ -40,7 +40,7 @@ function c1200037.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 end
 function c1200037.thfilter(c)
-	return c:IsAbleToHand() and not c:IsSetCard(0xfbc)
+	return c:IsAbleToHand() and not c:IsSetCard(0xfbc) and not c:IsCode(1200012,1200013,1200014,1200015,1200016,1200017,1200031,1200032,1200033,1200034,1200035,1200036)
 end
 function c1200037.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return false end
@@ -89,7 +89,6 @@ function c1200037.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c1200037.spop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return false end
 	local tc=Duel.GetFirstTarget()
 	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end

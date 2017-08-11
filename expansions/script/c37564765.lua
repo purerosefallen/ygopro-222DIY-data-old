@@ -37,6 +37,9 @@ if not Duel.GetLocationCountFromEx then
 		end
 		return effect_set_range(e,r)
 	end
+	function Card.IsSummonType(c,t)
+		return bit.band(c:GetSummonType(),t)==t
+	end
 end
 function cm.DescriptionInNanahira(id)
 	id=id or 0
@@ -1805,12 +1808,23 @@ function cm.Fusion_3L_Attribute(c,mt)
 	local f2=cm.AttributeReplace_3L(mt.fusion_att_3L)
 	return cm.Fusion_3L(c,cm.OR(f1,f2),cm.GroupFilterMulti(f1,f2),2,2)
 end
+function cm.GainEffectFilter(c,fc)
+	if not c.effect_operation_3L then return false end
+	local con=c.effect_condition_3L
+	if con and not con(c,fc) then return false end
+	return true
+end
+function cm.FusionGainFilter(c)
+	local t=cm.gain_effect_list_3L[c]
+	return c:IsSummonType(SUMMON_TYPE_FUSION) and t and c:GetFlagEffect(37564848)==0
+end
 function cm.enable_kaguya_check_3L()
 	if cm.kaguya_check_3L then return end
 	cm.kaguya_check_3L={}
 	cm.previous_chain_info={}
 	cm.kaguya_check_3L[0]=0
 	cm.kaguya_check_3L[1]=0
+	cm.gain_effect_list_3L={}
 	local e1=Effect.GlobalEffect()
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_CHAINING)
@@ -1833,6 +1847,47 @@ function cm.enable_kaguya_check_3L()
 		cm.kaguya_check_3L[1]=0
 	end)
 	Duel.RegisterEffect(e2,0)
+	local ge1=Effect.GlobalEffect()
+	ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	ge1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return eg:IsExists(cm.FusionGainFilter,1,nil)
+	end)
+	ge1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local g=eg:Filter(cm.FusionGainFilter,nil)
+		for tc in aux.Next(g) do
+			local t=cm.gain_effect_list_3L[tc]
+			for code,v in pairs(t) do
+				cm.GainEffect_3L(tc,code)
+			end
+			if not tc:IsType(TYPE_EFFECT) then
+				local e2=Effect.CreateEffect(tc)
+				e2:SetType(EFFECT_TYPE_SINGLE)
+				e2:SetCode(EFFECT_ADD_TYPE)
+				e2:SetValue(TYPE_EFFECT)
+				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e2:SetReset(RESET_EVENT+0x1fe0000)
+				tc:RegisterEffect(e2,true)
+			end
+		end
+	end)
+	Duel.RegisterEffect(ge1,0)
+	local ge3=Effect.GlobalEffect()
+	ge3:SetType(EFFECT_TYPE_FIELD)
+	ge3:SetCode(EFFECT_MATERIAL_CHECK)
+	ge3:SetProperty(EFFECT_FLAG_IGNORE_RANGE)
+	ge3:SetTargetRange(0xff,0xff)
+	ge3:SetValue(function(e,c)
+		if c:IsType(TYPE_FUSION) and cm.check_set_3L(c) then
+			local g=c:GetMaterial():Filter(cm.GainEffectFilter,nil,c)
+			local t={}
+			for tc in aux.Next(g) do
+				t[tc:GetOriginalCode()]=true
+			end
+			cm.gain_effect_list_3L[c]=t
+		end
+	end)
+	Duel.RegisterEffect(ge3,0)
 end
 function cm.CheckKoishiCount(c)
 	if Card.FilterEffect then
@@ -1845,33 +1900,6 @@ function cm.CheckKoishiCount(c)
 	else
 		return c.custom_ctlm_3L or 1
 	end
-end
-function cm.CommonEffect_3L(c,m,con)
-	cm.enable_kaguya_check_3L()
-	--cm.setreg(c,m,37564800)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetCode(EVENT_BE_MATERIAL)
-	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		local rc=e:GetHandler():GetReasonCard()
-		return bit.band(r,REASON_FUSION)~=0 and (not con or con(e,tp,eg,ep,ev,re,r,rp)) and cm.check_set_3L(rc) and rc:GetFlagEffect(37564848)==0
-	end)
-	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-		local rc=e:GetHandler():GetReasonCard()
-		cm.GainEffect_3L(rc,e:GetHandler())
-		if not rc:IsType(TYPE_EFFECT) then
-			local e2=Effect.CreateEffect(e:GetHandler())
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetCode(EFFECT_ADD_TYPE)
-			e2:SetValue(TYPE_EFFECT)
-			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e2:SetReset(RESET_EVENT+0x1fe0000)
-			rc:RegisterEffect(e2,true)
-		end
-	end)
-	c:RegisterEffect(e2)
-	return e2
 end
 --filter for effect gaining
 --chkc=card to check if it can gain c's effect, nil for not checking
@@ -2125,14 +2153,14 @@ function cm.PreExile(c)
 end
 function cm.ExileCard(c)
 	cm.PreExile(c)
-	Duel.SendtoDeck(c,nil,-1,REASON_RULE)
+	Duel.Exile(c,REASON_RULE)
 	c:ResetEffect(0xfff0000,RESET_EVENT)
 end
 function cm.ExileGroup(g)
 	for c in aux.Next(g) do
 		cm.PreExile(c)
 	end
-	Duel.SendtoDeck(g,nil,-1,REASON_RULE)
+	Duel.Exile(g,REASON_RULE)
 	for c in aux.Next(g) do
 		c:ResetEffect(0xfff0000,RESET_EVENT)
 	end

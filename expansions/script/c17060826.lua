@@ -48,7 +48,12 @@ function c17060826.initial_effect(c)
 	e6:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
 	c:RegisterEffect(e6)
 end
+c17060826.is_named_with_Mercenary_Arthur=1
 c17060826.is_named_with_Million_Arthur=1
+function c17060826.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
+end
 function c17060826.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

@@ -46,7 +46,12 @@ function c17060814.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 c17060814.pendulum_level=4
+c17060814.is_named_with_Mercenary_Arthur=1
 c17060814.is_named_with_Million_Arthur=1
+function c17060814.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
+end
 function c17060814.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

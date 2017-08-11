@@ -40,7 +40,12 @@ function c17060817.initial_effect(c)
 	e4:SetOperation(c17060817.penop)
 	c:RegisterEffect(e4)
 end
+c17060817.is_named_with_Singer_Arthur=1
 c17060817.is_named_with_Million_Arthur=1
+function c17060817.IsSinger_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Singer_Arthur
+end
 function c17060817.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur
@@ -104,25 +109,24 @@ function c17060817.caop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c17060817.filter(c,e,tp)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
 function c17060817.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
 end
+function c17060817.penfilter(c,e,tp)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function c17060817.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c17060817.filter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c17060817.penfilter,tp,LOCATION_PZONE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE)
 end
 function c17060817.penop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local c=e:GetHandler()
-	local g=Duel.SelectMatchingCard(tp,c17060817.filter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
-		if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		Duel.BreakEffect()
+	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c17060817.penfilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
+	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
 end

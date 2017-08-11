@@ -150,21 +150,21 @@ function c13254073.filter1(c)
 end
 function c13254073.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c13254073.filter1(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c13254073.filter1,tp,LOCATION_GRAVE,0,2,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c13254073.filter1,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g1=Duel.SelectTarget(tp,c13254073.filter1,tp,LOCATION_GRAVE,0,2,2,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,2,0,0)
+	local g1=Duel.SelectTarget(tp,c13254073.filter1,tp,LOCATION_GRAVE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,1,0,0)
 end
 function c13254073.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)~=2 then return end
+	if Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)~=1 then return end
 	Duel.BreakEffect()
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD+LOCATION_HAND)
 	if g:GetCount()==0 then return end
 	Duel.ConfirmCards(tp,g)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local dg=g:Select(tp,0,2,nil)
+	local dg=g:Select(tp,0,1,nil)
 	Duel.HintSelection(dg)
 	local ct=Duel.Destroy(dg,REASON_EFFECT)
 	g=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_DECK,0,nil)
@@ -172,7 +172,7 @@ function c13254073.operation(e,tp,eg,ep,ev,re,r,rp)
 	if ct>0 and dg:GetCount()>0 and Duel.SelectYesNo(1-tp,aux.Stringid(13254073,8)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_DESTROY)
-		local dg=g:Select(1-tp,1,3,nil)
+		local dg=g:Select(1-tp,1,2,nil)
 		Duel.Destroy(dg,REASON_EFFECT)
 	end
 	--Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(13254073,4))

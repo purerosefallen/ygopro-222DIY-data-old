@@ -60,8 +60,13 @@ function c17060819.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 c17060819.pendulum_level=7
-c17060819.named_with_Million_Arthur=1
+c17060819.is_named_with_Mercenary_Arthur=1
+c17060819.is_named_with_Million_Arthur=1
 c17060819.is_named_with_Dark_Degenerate=1
+function c17060819.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
+end
 function c17060819.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

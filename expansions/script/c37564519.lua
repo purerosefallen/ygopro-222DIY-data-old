@@ -4,7 +4,7 @@ local cm=_G["c"..m]
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	Senya.CommonEffect_3L(c,m)
+	--Senya.CommonEffect_3L(c,m)
 	Senya.Nanahira(c)
 	Senya.NegateEffectModule(c,1,m,Senya.SelfRemoveCost,Senya.NanahiraExistingCondition(true),nil,LOCATION_GRAVE,false)
 	Senya.NegateEffectModule(c,1,m,Senya.SelfReleaseCost,cm.discon,nil,LOCATION_HAND+LOCATION_MZONE,false)

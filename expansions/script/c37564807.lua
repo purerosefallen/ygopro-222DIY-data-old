@@ -5,7 +5,7 @@ xpcall(function() require("expansions/script/c37564765") end,function() require(
 cm.Senya_name_with_myon=4
 function cm.initial_effect(c)
 	Senya.Fusion_3L(c,Senya.check_fusion_set_3L,nil,2,2)
-	Senya.CommonEffect_3L(c,m)
+	--Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)

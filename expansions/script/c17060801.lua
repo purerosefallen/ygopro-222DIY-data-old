@@ -32,7 +32,12 @@ function c17060801.initial_effect(c)
 	e4:SetOperation(c17060801.pcop)
 	c:RegisterEffect(e4)
 end
+c17060801.is_named_with_Mercenary_Arthur=1
 c17060801.is_named_with_Million_Arthur=1
+function c17060801.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
+end
 function c17060801.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

@@ -49,7 +49,12 @@ function c17060830.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 c17060830.pendulum_level=4
+c17060830.is_named_with_Mercenary_Arthur=1
 c17060830.is_named_with_Million_Arthur=1
+function c17060830.Mercenary_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Mercenary_Arthur
+end
 function c17060830.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur
@@ -61,7 +66,7 @@ function c17060830.cfilter(c)
 	return c17060830.IsMillion_Arthur(c)
 end
 function c17060830.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c17060826.cfilter,tp,LOCATION_PZONE,0,1,e:GetHandler())
+	return Duel.IsExistingMatchingCard(c17060830.cfilter,tp,LOCATION_PZONE,0,1,e:GetHandler())
 end
 function c17060830.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -115,8 +120,11 @@ function c17060830.psop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(g:GetFirst(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
 end
+function c17060830.scfilter(c)
+	return c17060830.Mercenary_Arthur(c)
+end
 function c17060830.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,17060801)
+	return e:GetHandler():GetOverlayGroup():IsExists(c17060830.scfilter,1,nil,tp)
 end
 function c17060830.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

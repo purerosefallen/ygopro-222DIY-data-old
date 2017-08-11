@@ -6,7 +6,7 @@ cm.Senya_name_with_myon=3
 function cm.initial_effect(c)
 	c:SetUniqueOnField(1,0,m)
 	Senya.Fusion_3L(c,Senya.OR(cm.lfusfilter,cm.mfilter),Senya.GroupFilterMulti(cm.lfusfilter,cm.lfusfilter,cm.mfilter),3,3,true)
-	Senya.CommonEffect_3L(c,m)
+	--Senya.CommonEffect_3L(c,m)
 	--[[local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)

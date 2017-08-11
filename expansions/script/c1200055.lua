@@ -72,11 +72,11 @@ end
 function c1200055.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(c1200055.matfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(c1200055.matfilter,tp,LOCATION_MZONE,0,nil)
 	return g:IsExists(c1200055.cfilter1,1,nil,tp,g)
 end
 function c1200055.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.GetMatchingGroup(c1200055.matfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(c1200055.matfilter,tp,LOCATION_MZONE,0,nil)
 	local g1=g:FilterSelect(tp,c1200055.cfilter1,1,1,nil,tp,g)
 	local mc=g1:GetFirst()
 	local g2=g:FilterSelect(tp,c1200055.cfilter2,1,1,mc,tp,mc)
@@ -147,7 +147,6 @@ function c1200055.pptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c1200055.ppop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return false end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) then
 		if Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then

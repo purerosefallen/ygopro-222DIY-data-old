@@ -76,7 +76,7 @@ function c13254107.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c13254107.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	local cg=Duel.GetMatchingGroup(c13254107.cfilter,tp,LOCATION_GRAVE,0,nil)
 	local ct=cg:GetCount()
-	if ct>2 then ct=2 end
+	if ct>4 then ct=4 end
 	Duel.SendtoDeck(cg,nil,2,REASON_COST)
 	e:SetLabel(ct)
 end

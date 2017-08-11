@@ -3,7 +3,7 @@ local m=37564838
 local cm=_G["c"..m]
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function cm.initial_effect(c)
-	Senya.CommonEffect_3L(c,m) 
+	--Senya.CommonEffect_3L(c,m) 
 end
 function cm.effect_operation_3L(c,ctlm)
 	local e2=Effect.CreateEffect(c)

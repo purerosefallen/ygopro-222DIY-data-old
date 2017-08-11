@@ -20,7 +20,7 @@ function c17060821.initial_effect(c)
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_ATKCHANGE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetCountLimit(1,170608211)
+	e3:SetCountLimit(1,17060821+100)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTarget(c17060821.destg)
@@ -34,7 +34,7 @@ function c17060821.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1,1706082111)
+	e4:SetCountLimit(1,17060821+200)
 	e4:SetCondition(c17060821.negcon)
 	e4:SetTarget(c17060821.negtg)
 	e4:SetOperation(c17060821.negop)
@@ -63,8 +63,13 @@ function c17060821.initial_effect(c)
 	e7:SetValue(1)
 	c:RegisterEffect(e7)
 end
+c17060821.is_named_with_Regal_Arthur=1
 c17060821.is_named_with_Million_Arthur=1
 c17060821.is_named_with_Dark_Degenerate=1
+function c17060821.IsRegal_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Regal_Arthur
+end
 function c17060821.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur
@@ -125,12 +130,10 @@ function c17060821.negop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c17060821.penon(e,tp,eg,ep,ev,re,r,rp)
-	return not (Duel.IsExistingMatchingCard(aux.FilterEqualFunction(Card.GetSummonLocation,LOCATION_EXTRA),tp,0,LOCATION_MZONE,1,nil)
-	and Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
+	return not Duel.IsExistingMatchingCard(aux.FilterEqualFunction(Card.GetSummonLocation,LOCATION_EXTRA),tp,0,LOCATION_MZONE,1,nil)
 end
 function c17060821.penon1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FilterEqualFunction(Card.GetSummonLocation,LOCATION_EXTRA),tp,0,LOCATION_MZONE,1,nil)
-	and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 end
 function c17060821.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end

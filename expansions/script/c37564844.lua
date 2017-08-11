@@ -4,7 +4,7 @@ local cm=_G["c"..m]
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_myon=6
 function cm.initial_effect(c)
-	Senya.CommonEffect_3L(c,m)
+	--Senya.CommonEffect_3L(c,m)
 	aux.AddXyzProcedure(c,aux.FALSE,10,5,cm.xfilter,m*16)
 	c:EnableReviveLimit()
 	Senya.ContinuousEffectGainModule_3L(c,cm.omit_group_3L,cm.exccost)

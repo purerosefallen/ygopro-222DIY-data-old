@@ -24,7 +24,12 @@ function c17060803.initial_effect(c)
 	e3:SetOperation(c17060803.spop)
 	c:RegisterEffect(e3)
 end
+c17060803.is_named_with_Singer_Arthur=1
 c17060803.is_named_with_Million_Arthur=1
+function c17060803.IsSinger_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Singer_Arthur
+end
 function c17060803.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

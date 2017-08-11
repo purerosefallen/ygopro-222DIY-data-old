@@ -33,7 +33,7 @@ function c1200016.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c1200016.spfilter(c,e,tp,rec,att)
-	return c:IsSetCard(0xfba) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsType(TYPE_MONSTER) and (c:IsRace(rec) or c:IsAttribute(att))
+	return c:IsSetCard(0xfba) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(1200016) and c:IsType(TYPE_MONSTER) and (c:IsRace(rec) or c:IsAttribute(att))
 end
 function c1200016.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

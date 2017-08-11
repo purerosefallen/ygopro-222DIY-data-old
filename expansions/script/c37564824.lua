@@ -4,7 +4,7 @@ local cm=_G["c"..m]
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function cm.initial_effect(c)
 	Senya.AddSummonMusic(c,m*16,SUMMON_TYPE_XYZ)
-	Senya.CommonEffect_3L(c,m)
+	--Senya.CommonEffect_3L(c,m)
 	Senya.AddXyzProcedureCustom(c,cm.xfilter,nil,2,63)
 	Senya.ContinuousEffectGainModule_3L(c,cm.omit_group_3L,Senya.DirectReturn(Senya.RemoveOverlayCost(1)))
 end

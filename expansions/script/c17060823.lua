@@ -50,8 +50,13 @@ function c17060823.initial_effect(c)
 	e4:SetOperation(c17060823.penop)
 	c:RegisterEffect(e4)
 end
+c17060823.is_named_with_Singer_Arthur=1
 c17060823.is_named_with_Million_Arthur=1
 c17060823.is_named_with_Dark_Degenerate=1
+function c17060823.IsSinger_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Singer_Arthur
+end
 function c17060823.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur

@@ -3,7 +3,7 @@ function c33700056.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,m+EFFECT_COUNT_CODE_OATH)
+	e1:SetCountLimit(1,33700056+EFFECT_COUNT_CODE_OATH)
 	c:RegisterEffect(e1)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -51,7 +51,7 @@ function c33700056.filter(c,tp)
 	return c:IsSetCard(0x442) and c:IsAbleToGraveAsCost() and c:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(c33700056.filter2,tp,LOCATION_DECK,0,1,nil)
 end
 function c33700056.filter2(c)
-	return c:IsSetCard(0x442)  and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x442) and c:IsType(TYPE_MONSTER)
    and c:IsAbleToHand()
 end
 function c33700056.target(e,tp,eg,ep,ev,re,r,rp,chk)

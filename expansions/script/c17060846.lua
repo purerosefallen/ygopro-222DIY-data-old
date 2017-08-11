@@ -32,7 +32,12 @@ function c17060846.initial_effect(c)
 	e3:SetCondition(c17060846.rmcon)
 	c:RegisterEffect(e3)
 end
+c17060846.is_named_with_Singer_Arthur=1
 c17060846.is_named_with_Million_Arthur=1
+function c17060846.IsSinger_Arthur(c)
+	local m=_G["c"..c:GetCode()]
+	return m and m.is_named_with_Singer_Arthur
+end
 function c17060846.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur
