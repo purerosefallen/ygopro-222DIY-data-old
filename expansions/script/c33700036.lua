@@ -112,19 +112,18 @@ function c33700036.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return  Duel.GetFlagEffect(tp,33700036)==0 end
 	Duel.RegisterFlagEffect(tp,33700036,RESET_CHAIN,0,1)
 end
-function c33700036.spfilter(c,g)
-	return c:IsCode(33700030) and c:IsFaceup() and c:IsCanBeXyzMaterial(g)
+function c33700036.spfilter(c,g,tp)
+	return c:IsCode(33700030) and c:IsFaceup() and c:IsCanBeXyzMaterial(g) and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c33700036.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c33700036.spfilter,tp,LOCATION_ONFIELD,0,1,nil,e:GetHandler()) 
-	 and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)  end
+	if chk==0 then return Duel.IsExistingMatchingCard(c33700036.spfilter,tp,LOCATION_ONFIELD,0,1,nil,e:GetHandler(),tp) 
+	 and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) end
 	 Duel.ConfirmCards(tp,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_EXTRA)
 end
 function c33700036.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<-1 or not e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) then return end
-   local g=Duel.SelectMatchingCard(tp,c33700036.spfilter,tp,LOCATION_ONFIELD,0,1,1,nil,e:GetHandler())
+	if not e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) then return end
+   local g=Duel.SelectMatchingCard(tp,c33700036.spfilter,tp,LOCATION_ONFIELD,0,1,1,nil,e:GetHandler(),tp)
    local t=g:GetFirst()
    if t  and not t:IsImmuneToEffect(e) then
 		local mg=t:GetOverlayGroup()
@@ -143,10 +142,10 @@ function c33700036.pencon(e,tp,eg,ep,ev,re,r,rp)
 	 c:GetOverlayCount()>0
 end
 function c33700036.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_PZONE)>0 end
 end
 function c33700036.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckLocation(tp,LOCATION_SZONE,6) and not Duel.CheckLocation(tp,LOCATION_SZONE,7) then return false end
+	if Duel.GetLocationCount(tp,LOCATION_PZONE)<=0 then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)

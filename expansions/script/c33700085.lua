@@ -1,4 +1,5 @@
 --动物朋友 西之白虎
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c33700085.initial_effect(c)
 	  --synchro summon
 	aux.AddSynchroProcedure2(c,nil,aux.NonTuner(nil))
@@ -58,17 +59,19 @@ function c33700085.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function c33700085.confilter(c)
-	return c:IsSetCard(0x442) and c:IsFaceup() and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x442) and c:IsFaceup() and c:IsAbleToGraveAsCost() and c:GetLevel()>0
+end
+function c33700085.gcheck(g,tp,fc)
+	return Duel.GetLocationCountFromEx(tp,tp,g,fc)>0 and g:GetSum(Card.GetLevel)==4
 end
 function c33700085.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local mg=Duel.GetMatchingGroup(c33700085.confilter,tp,LOCATION_MZONE,0,nil)
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-4
-		and mg:CheckWithSumEqual(Card.GetLevel,4,1,5,c)
+	return Senya.CheckGroup(mg,c33700085.gcheck,nil,1,4,tp,c)
 end
 function c33700085.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c33700085.confilter,tp,LOCATION_MZONE,0,nil)
-	local g=mg:SelectWithSumEqual(tp,Card.GetLevel,4,1,5)
+	local g=Senya.SelectGroup(tp,HINTMSG_TOGRAVE,mg,c33700085.gcheck,nil,1,4,tp,c)
 	Duel.SendtoGrave(g,REASON_COST)
 end

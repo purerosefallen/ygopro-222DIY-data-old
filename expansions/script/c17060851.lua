@@ -1,7 +1,7 @@
 --
 function c17060851.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,c17060851.matfilter,2,2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_PENDULUM),2)
 	c:EnableReviveLimit()
 	--to grave
 	local e1=Effect.CreateEffect(c)
@@ -33,9 +33,6 @@ end
 function c17060851.IsMillion_Arthur(c)
 	local m=_G["c"..c:GetCode()]
 	return m and m.is_named_with_Million_Arthur
-end
-function c17060851.matfilter(c)
-	return c17060851.IsMillion_Arthur(c)
 end
 function c17060851.lvfilter(c,tp)
 	local LeftScale=c:GetLeftScale()

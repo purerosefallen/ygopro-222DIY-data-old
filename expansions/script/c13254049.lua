@@ -102,13 +102,12 @@ function c13254049.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local tg=Duel.SelectMatchingCard(tp,c13254049.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,5,5,nil)
-	Duel.HintSelection(tg)
 	Duel.SendtoDeck(tg,nil,2,REASON_EFFECT)
 	g=Duel.GetOperatedGroup()
 	if g:IsExists(c13254049.sfilter,1,nil,tp) then Duel.ShuffleDeck(tp) end
 	if g:IsExists(c13254049.sfilter,1,nil,1-tp) then Duel.ShuffleDeck(1-tp) end
 	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-	if ct==3 then
+	if ct==5 then
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end

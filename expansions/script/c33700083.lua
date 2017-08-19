@@ -1,7 +1,7 @@
 --动物朋友 南之朱雀
 function c33700083.initial_effect(c)
 	 c:EnableReviveLimit()
-	 aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,33700083),18,true)
+	aux.AddFusionProcFunRep(c,c33700083.ffilter,2,true)
    --
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(33700083,0))
@@ -30,91 +30,27 @@ function c33700083.initial_effect(c)
 	--e3:SetOperation(c33700083.fusop)
    -- c:RegisterEffect(e3)
 end
-function c33700083.ffilter1(c,tp)
-   local lv=c:GetLevel()
-   return lv>0  and Duel.IsExistingMatchingCard(c33700083.ffilter2,tp,LOCATION_MZONE,0,nil,lv,c:GetRace(),c:GetFusionAttribute())
+function c33700083.ffilter1(c,mc)
+	return c:GetLevel()==mc:GetLevel() and not c:IsRace(mc:GetRace()) and not c:IsAttribute(mc:GetAttribute())
 end
-function c33700083.ffilter2(c,lv,rc,att)
-	 return c:GetLevel()==lv and c:GetRace()~=rc  and not c:IsFusionAttribute(att)
-end
-function c33700083.fuscon(e,g,gc,chkf)
-	if g==nil then return true end
-	local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
-	local tp=e:GetHandlerPlayer()
-	if gc then
-		if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
-		return c33700083.ffilter1(gc,tp)		 
-	end
-	local g1=Group.CreateGroup()
-	local g2=Group.CreateGroup()
-	local g3=Group.CreateGroup()
-	local g4=Group.CreateGroup()
-	local tc=mg:GetFirst()
-	while tc do
-		if c33700083.ffilter1(tc,tp) then
-			local pc=mg:Filter(c33700083.ffilter2,tc,tc:GetLevel(),tc:GetRace(),tc:GetFusionAttribute())
-			g1:AddCard(tc)
-			g3:AddCard(pc)
-			if aux.FConditionCheckF(tc,chkf) then 
-			g2:AddCard(tc) 
-			g4:AddCard(pc) end
-		end
-		tc=mg:GetNext()
-	end
-	if chkf~=PLAYER_NONE then
-		return (g3:IsExists(aux.FConditionFilterF2,1,nil,g2))
-			or g4:IsExists(aux.FConditionFilterF2,1,nil,g1)
-	else
-		return (g1:IsExists(aux.FConditionFilterF2,1,nil,g2))
-	end
-end
-function c33700083.fusop(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
-	local g=eg:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
-	if gc then
-		local sg1=Group.CreateGroup()
-   local sg2=Group.CreateGroup()
-		if c33700083.ffilter1(gc,tp) then
-			sg1:Merge(g:Filter(c33700083.ffilter2,gc,gc:GetLevel(),gc:GetRace(),gc:GetFusionAttribute()))
-		   sg2:Merge(g:Filter(c33700083.ffilter1,gc,tp))
-		end
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-			local g1=sg1:Select(tp,1,1,nil)
-		Duel.SetFusionMaterial(g1)
-		return
-	end
-   
-	local g1=nil
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-	if chkf~=PLAYER_NONE then
-		g1=g:Filter(aux.FConditionCheckF,nil,chkf):FilterSelect(tp,c33700083.ffilter1,1,1,nil,tp)
-	else g1=g:FilterSelect(tp,c33700083.ffilter1,1,1,nil,tp) end
-	local tc1=g1:GetFirst()
-	local sg1=Group.CreateGroup()
-	if c33700083.ffilter1(tc1,tp) then
-		sg1:Merge(g:Filter(c33700083.ffilter2,tc1,tc1:GetLevel(),tc1:GetRace(),tc1:GetFusionAttribute()))
-	end
-	local g2=nil
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-	g2=sg1:Select(tp,1,1,nil)
-	g1:Merge(g2)
-	Duel.SetFusionMaterial(g1)
+function c33700083.ffilter(c,fc,sub,mg,sg)
+	return c:GetLevel()>0 and (not sg or sg:FilterCount(aux.TRUE,c)==0 or sg:IsExists(c33700083.ffilter1,1,c,c))
 end
 function c33700083.spfilter1(c,tp,fc)
 	return c:IsFusionSetCard(0x442) and c:IsSummonableCard()  and c:IsCanBeFusionMaterial(fc)
-		and Duel.CheckReleaseGroup(tp,c33700083.spfilter2,1,c,fc,c:GetCode())
+		and Duel.CheckReleaseGroup(tp,c33700083.spfilter2,1,c,fc,c,tp)
 end
-function c33700083.spfilter2(c,fc,code)
-	return c:IsFusionSetCard(0x442) and c:IsSummonableCard() and c:IsCanBeFusionMaterial(fc) and c:GetCode()~=code
+function c33700083.spfilter2(c,fc,mc,tp)
+	return c:IsFusionSetCard(0x442) and c:IsSummonableCard() and c:IsCanBeFusionMaterial(fc) and c:GetCode()~=mc:GetCode() and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc),fc)>0
 end
 function c33700083.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and Duel.CheckReleaseGroup(tp,c33700083.spfilter1,1,nil,tp,c)
+	return Duel.CheckReleaseGroup(tp,c33700083.spfilter1,1,nil,tp,c)
 end
 function c33700083.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g1=Duel.SelectReleaseGroup(tp,c33700083.spfilter1,1,1,nil,tp,c)
-	local g2=Duel.SelectReleaseGroup(tp,c33700083.spfilter2,1,1,g1:GetFirst(),c)
+	local g2=Duel.SelectReleaseGroup(tp,c33700083.spfilter2,1,1,g1:GetFirst(),c,g1:GetFirst(),tp)
 	g1:Merge(g2)
 	c:SetMaterial(g1)
 	Duel.Release(g1,REASON_COST+REASON_FUSION+REASON_MATERIAL)
@@ -133,20 +69,20 @@ function c33700083.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,tg,sg:GetCount(),0,0)
 end
 function c33700083.op(e,tp,eg,ep,ev,re,r,rp)
-	 local sg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+	local sg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	local g=Duel.GetMatchingGroup(c33700083.pfilter,tp,LOCATION_HAND,0,nil)
 	if sg:GetCount()~=g:GetCount() then return end
 	Duel.ConfirmCards(1-tp,sg)
 	if  sg:GetClassCount(Card.GetCode)==sg:GetCount() then
-	Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
-	local ct=sg:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetCount()
-	local tg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_GRAVE,0,nil)
-	if ct>0 and tg:GetCount()>=ct then
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sel=tg:Select(tp,ct,ct,nil)
-		Duel.SendtoHand(sel,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sel)
+		Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
+		local ct=sg:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetCount()
+		local tg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_GRAVE,0,nil)
+		if ct>0 and tg:GetCount()>=ct then
+			Duel.BreakEffect()
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local sel=tg:Select(tp,ct,ct,nil)
+			Duel.SendtoHand(sel,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,sel)
+		end
 	end
-end
 end

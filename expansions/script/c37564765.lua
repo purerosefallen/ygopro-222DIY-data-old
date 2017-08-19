@@ -1727,7 +1727,7 @@ function cm.HoldGroupFilter(c,mg)
 end
 --3L fusion monster, c=card, m=code
 --exf=extra function
-function cm.Fusion_3L(c,mf,f,min,max,myon)
+function cm.Fusion_3L(c,mf,f,min,max,myon,sub)
 	cm.enable_kaguya_check_3L()
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	c:EnableReviveLimit()
@@ -1735,67 +1735,72 @@ function cm.Fusion_3L(c,mf,f,min,max,myon)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_FUSION_MATERIAL)
-	e1:SetCondition(cm.FusionCondition_3L(mf,f,min,max,myon))
-	e1:SetOperation(cm.FusionOperation_3L(mf,f,min,max,myon))
+	e1:SetCondition(cm.FusionCondition_3L(mf,f,min,max,myon,sub))
+	e1:SetOperation(cm.FusionOperation_3L(mf,f,min,max,myon,sub))
 	c:RegisterEffect(e1)
 end
 function cm.MyonCheckFilter(c,ec,chkfnf,myon)
 	return (c:IsHasEffect(37564841) or myon) and c:IsFaceup() and c:IsCanBeFusionMaterial(ec)
 end
-function cm.FusionFilter_3L(c,fc,mf)
-	return c:IsCanBeFusionMaterial(fc) and not c:IsHasEffect(6205579) and ((not mf or mf(c)) or c:IsHasEffect(37564914))
+function cm.FusionFilter_3L(c,fc,mf,sub)
+	return c:IsCanBeFusionMaterial(fc) and not c:IsHasEffect(6205579) and ((not mf or mf(c,fc,sub)) or c:IsHasEffect(37564914))
 end
-function cm.FusionCheck_3L(g,min,tp,fc,f,chkf)
+function cm.FusionCheck_3L(g,min,tp,fc,f,chkf,sub)
 		--check sayuri_3L
 	if chkf~=PLAYER_NONE and Duel.GetLocationCountFromEx(chkf,tp,g,fc)<=0 then return false end
 	if aux.FCheckAdditional and not aux.FCheckAdditional(tp,g,fc) then return false end
 	local ct=g:GetCount()
 	if ct==1 and fc:GetLevel()==7 and g:GetFirst():IsHasEffect(37564914) then return true end
-	return ct>=min and (not f or f(g,fc))
+	return ct>=min and (not f or f(g,fc,sub))
 end
-function cm.FusionCondition_3L(mf,f,min,max,myon)
+function cm.FusionCondition_3L(mf,f,min,max,myon,sub)
 return function(e,g,gc,chkfnf)
 	if g==nil then return true end
 	local c=e:GetHandler()
 	local chkf=bit.band(chkfnf,0xff)
-	local mg=g:Filter(cm.FusionFilter_3L,nil,e:GetHandler(),mf)
+	local mg=g:Filter(cm.FusionFilter_3L,nil,e:GetHandler(),mf,sub)
 	local tp=e:GetHandlerPlayer()
 	local sg=Group.CreateGroup()
 	if gc then
-		if not cm.FusionFilter_3L(gc,fc,mf) then return false end
+		if not cm.FusionFilter_3L(gc,fc,mf,sub) then return false end
 		sg:AddCard(gc)
 	end
 	local exg=Duel.GetMatchingGroup(cm.MyonCheckFilter,tp,0,LOCATION_MZONE,nil,c,chkf,myon)
 	mg:Merge(exg)
-	return cm.CheckGroup(mg,cm.FusionCheck_3L,sg,1,max,min,tp,c,f,chkfnf)
+	return cm.CheckGroup(mg,cm.FusionCheck_3L,sg,1,max,min,tp,c,f,chkfnf,sub)
 end
 end
-function cm.FusionOperation_3L(mf,f,min,max,myon)
+function cm.FusionOperation_3L(mf,f,min,max,myon,sub)
 return function(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	local c=e:GetHandler()
 	local chkf=bit.band(chkfnf,0xff)
-	local mg=eg:Filter(cm.FusionFilter_3L,nil,e:GetHandler(),mf)
+	local mg=eg:Filter(cm.FusionFilter_3L,nil,e:GetHandler(),mf,sub)
 	local sg=Group.CreateGroup()
 	if gc then sg:AddCard(gc) end
 	local exg=Duel.GetMatchingGroup(cm.MyonCheckFilter,tp,0,LOCATION_MZONE,nil,c,chkf,myon)
 	mg:Merge(exg)
-	local g=cm.SelectGroup(tp,HINTMSG_FMATERIAL,mg,cm.FusionCheck_3L,sg,1,max,min,tp,c,f,chkf)
+	local g=cm.SelectGroup(tp,HINTMSG_FMATERIAL,mg,cm.FusionCheck_3L,sg,1,max,min,tp,c,f,chkf,sub)
 	Duel.SetFusionMaterial(g)
 end
 end
-function cm.GroupFilterMultiCheck(c,g,list,ct)
+function cm.GroupFilterMultiCheck(c,g,list,ct,fc,sub)
 	local f=list[ct]
-	if not f(c) then return false end
+	if not f(c,fc,sub) then return false end
 	if ct==#list then return true end
+	local res=false
 	g:RemoveCard(c)
-	local res=g:IsExists(cm.GroupFilterMultiCheck,1,nil,g,list,ct+1)
+	if sub and f(c,fc,false) then
+		res=g:IsExists(cm.GroupFilterMultiCheck,1,nil,g,list,ct+1,fc,true)
+	else
+		res=g:IsExists(cm.GroupFilterMultiCheck,1,nil,g,list,ct+1,fc,false)
+	end
 	g:AddCard(c)
 	return res
 end
 function cm.GroupFilterMulti(...)
 	local list={...}
-	return function(g)
-		return g:IsExists(cm.GroupFilterMultiCheck,1,nil,g,list,1)
+	return function(g,fc,sub)
+		return g:IsExists(cm.GroupFilterMultiCheck,1,nil,g,list,1,fc,sub)
 	end
 end
 function cm.AttributeReplace_3L(att)
@@ -2006,7 +2011,7 @@ function cm.RemoveEffect_3L(tp,tc,ct,maxct,chk,...)
 	local avaliable_list={}
 	local omit_list={...}
 	if Card.FilterEffect then
-		local oet=tc:FilterEffect(37564827)
+		local oet={tc:FilterEffect(37564827)}
 		for i,oe in pairs(oet) do
 			local of=cm.order_table[oe:GetValue()]
 			local og=of(tc)
@@ -2508,4 +2513,17 @@ function cm.AddSummonMusic(c,desc,stype)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
+end
+function cm.IgnoreActionCheck(f,...)
+	Duel.DisableActionCheck(true)
+	local cr=coroutine.create(f)
+	local ret={}
+	while coroutine.status(cr)~="dead" do
+		local sret={coroutine.resume(cr,...)}
+		for _,v in ipairs(sret) do
+			table.insert(ret,v)
+		end
+	end
+	Duel.DisableActionCheck(false)
+	return table.unpack(ret)
 end

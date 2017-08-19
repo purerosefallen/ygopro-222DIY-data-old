@@ -33,10 +33,7 @@ function c33700002.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c33700002.sumcon(e)
-	local g1=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,6) 
-	local g2=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,7)
-	return not (g1 and g2) or not (g1 and g1:IsSetCard(0x3440))
-   or not (g2 and g2:IsSetCard(0x3440))
+	return not Duel.IsExistingMatchingCard(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,nil,0x3440)
 end
 function c33700002.sfilter(c)
 	return c:IsSetCard(0x3440) and c:IsFaceup()

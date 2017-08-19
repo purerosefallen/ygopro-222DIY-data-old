@@ -73,8 +73,7 @@ function c17060816.syntg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(c17060816.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) 
 	and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) 
 	and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.IsPlayerCanSpecialSummonCount(tp,2) 
-	and Duel.GetLocationCountFromEx(tp,tp,c)>0 end
+	and Duel.IsPlayerCanSpecialSummonCount(tp,2) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c17060816.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)

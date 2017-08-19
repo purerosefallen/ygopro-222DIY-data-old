@@ -30,7 +30,7 @@ function c21990009.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,tc)
 	if tc:IsRelateToEffect(e) then
-		if Duel.ChangePosition(sg,POS_FACEDOWN_DEFENCE) then
+		if Duel.ChangePosition(sg,POS_FACEDOWN_DEFENSE) then
 			Duel.Draw(1-tp,1,REASON_EFFECT)
 		end
 	end

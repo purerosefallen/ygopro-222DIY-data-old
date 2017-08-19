@@ -40,7 +40,7 @@ function c1200037.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 end
 function c1200037.thfilter(c)
-	return c:IsAbleToHand() and not c:IsSetCard(0xfbc) and not c:IsCode(1200012,1200013,1200014,1200015,1200016,1200017,1200031,1200032,1200033,1200034,1200035,1200036)
+	return c:IsAbleToHand() and not c:IsSetCard(0xfbc) and not c:IsCode(1200002,1200003,1200004,1200005,1200006,1200017,1200021,1200022,1200023,1200024,1200025,1200026,1200027)
 end
 function c1200037.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return false end

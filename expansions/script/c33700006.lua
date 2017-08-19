@@ -81,26 +81,34 @@ end
 function c33700006.aclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)
 end
-function c33700006.tgfilter(c,fc)
-	return c:IsFusionSetCard(0x6440) and c:IsAbleToGraveAsCost()
-and c:IsCanBeFusionMaterial(fc)
+function c33700006.rmfilter(c,fc,g)
+	local tp=fc:GetControler()
+	if not (c:IsFusionSetCard(0x6440) and c:IsAbleToGraveAsCost() and c:IsCanBeFusionMaterial(fc)) then return false end
+	g:AddCard(c)
+	local res=(g:GetCount()>=2 and Duel.GetLocationCountFromEx(tp,tp,g,fc)>0)
+		or Duel.IsExistingMatchingCard(c33700006.rmfilter,tp,LOCATION_MZONE,0,1,nil,fc,g)
+	g:RemoveCard(c)
+	return res
 end
 function c33700006.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<-1 then return false end
-	return Duel.IsExistingMatchingCard(c33700006.tgfilter,tp,LOCATION_MZONE,0,2,nil,c)
+	local g=Group.CreateGroup()
+	return Duel.IsExistingMatchingCard(c33700006.rmfilter,tp,LOCATION_MZONE,0,1,nil,c,g)
 end
 function c33700006.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TPGRAVE)
-	local g1=Duel.SelectMatchingCard(tp,c33700006.tgfilter,tp,LOCATION_MZONE,0,2,2,nil,e:GetHandler())
+	local g1=Group.CreateGroup()	
+	for i=1,2 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,c33700006.rmfilter,tp,LOCATION_MZONE,0,1,1,nil,e:GetHandler(),g1)
+		g1:Merge(g)
+	end
 	 local tc=g1:GetFirst()
 	while tc do
 		if not tc:IsFaceup() then Duel.ConfirmCards(1-tp,tc) end
 		tc=g1:GetNext()
 	end
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
+	Duel.SendtoGrave(g1,REASON_COST)
 	e:GetHandler():RegisterFlagEffect(33700006,RESET_EVENT+0x1fe0000,0,1)
 end
 function c33700006.pencon(e,tp,eg,ep,ev,re,r,rp)
@@ -108,10 +116,10 @@ function c33700006.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
 end
 function c33700006.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_PZONE)>0 end
 end
 function c33700006.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckLocation(tp,LOCATION_SZONE,6) and not Duel.CheckLocation(tp,LOCATION_SZONE,7) then return false end
+	if Duel.GetLocationCount(tp,LOCATION_PZONE)<=0 then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)

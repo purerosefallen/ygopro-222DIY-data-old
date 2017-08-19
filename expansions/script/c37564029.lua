@@ -58,7 +58,7 @@ function cm.initial_effect(c)
 	e88:SetCost(cm.cost)
 	e88:SetTarget(cm.tgtg)
 	e88:SetOperation(cm.tgop)
-	c:RegisterEffect(e8)
+	c:RegisterEffect(e88)
 end
 function cm.atkval(e,c)
 	return c:GetOverlayCount()*1000

@@ -97,32 +97,41 @@ function c33700004.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
-function c33700004.rmfilter(c,fc)
-	return c:IsFusionSetCard(0x6440) and c:IsAbleToRemoveAsCost()
-and  c:IsCanBeFusionMaterial(fc)
+function c33700004.rmfilter(c,fc,g)
+	local tp=fc:GetControler()
+	if not (c:IsFusionSetCard(0x6440) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc)) then return false end
+	g:AddCard(c)
+	local res=(g:GetCount()>=4 and Duel.GetLocationCountFromEx(tp,tp,g,fc)>0)
+		or Duel.IsExistingMatchingCard(c33700004.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,fc,g)
+	g:RemoveCard(c)
+	return res
 end
 function c33700004.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local c1=Duel.GetFieldCard(tp,LOCATION_SZONE,6)
-	local c2=Duel.GetFieldCard(tp,LOCATION_SZONE,7)
-	if ft<-3 or not  ((c1 and c1:IsSetCard(0x3440)) or (c2 and c2:IsSetCard(0x3440)))then return false end
-	return Duel.IsExistingMatchingCard(c33700004.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,4,nil,c)
+	local c1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
+	local c2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
+	if not ((c1 and c1:IsSetCard(0x3440)) or (c2 and c2:IsSetCard(0x3440))) then return false end
+	local g=Group.CreateGroup()
+	return Duel.IsExistingMatchingCard(c33700004.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,c,g)
 end
 function c33700004.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c33700004.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,4,4,nil,e:GetHandler())
-	 local tc=g1:GetFirst()
+	local g1=Group.CreateGroup()	
+	for i=1,4 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,c33700004.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,e:GetHandler(),g1)
+		g1:Merge(g)
+	end
+	local tc=g1:GetFirst()
 	while tc do
 		if not tc:IsFaceup() then Duel.ConfirmCards(1-tp,tc) end
 		tc=g1:GetNext()
 	end
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 	if g1:FilterCount(Card.IsPreviousLocation,nil,LOCATION_GRAVE)>0 then
-	local p=g1:FilterCount(Card.IsPreviousLocation,nil,LOCATION_GRAVE)
-	Duel.Damage(tp,p*2000,REASON_EFFECT)
-end
+		local p=g1:FilterCount(Card.IsPreviousLocation,nil,LOCATION_GRAVE)
+		Duel.Damage(tp,p*2000,REASON_EFFECT)
+	end
 end
 function c33700004.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetAttackAnnouncedCount()==0 end
@@ -148,10 +157,10 @@ function c33700004.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
 end
 function c33700004.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_PZONE)>0 end
 end
 function c33700004.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckLocation(tp,LOCATION_SZONE,6) and not Duel.CheckLocation(tp,LOCATION_SZONE,7) then return false end
+	if Duel.GetLocationCount(tp,LOCATION_PZONE)<=0 then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)

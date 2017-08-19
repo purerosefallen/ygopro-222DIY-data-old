@@ -52,7 +52,7 @@ function c33700029.counterfilter(c)
 end
 function c33700029.secon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_SZONE) and (c:GetPreviousSequence()==6 or c:GetPreviousSequence()==7) and c:IsLocation(LOCATION_EXTRA) and c:IsFaceup()
+	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_PZONE) and c:IsLocation(LOCATION_EXTRA) and c:IsFaceup()
 end
 function c33700029.sefilter(c)
 	return c:IsSetCard(0x6440) and c:IsAbleToHand()

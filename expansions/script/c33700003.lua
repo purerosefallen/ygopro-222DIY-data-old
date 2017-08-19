@@ -39,9 +39,7 @@ function c33700003.splimit(e,c)
 	return not (c:IsSetCard(0x6440) or c:IsSetCard(0x3440) or c:IsSetCard(0x5440))
 end
 function c33700003.condition(e,tp,eg,ep,ev,re,r,rp)
-	 local g1=Duel.GetFieldCard(tp,LOCATION_SZONE,6) 
-	local g2=Duel.GetFieldCard(tp,LOCATION_SZONE,7)
-	return (g1 and (g1:IsSetCard(0x6440) or g1:IsSetCard(0x3440)) and g1:IsFaceup()) or (g2 and (g2:IsSetCard(0x6440) or g2:IsSetCard(0x3440)) and g2:IsFaceup())
+	return Duel.IsExistingMatchingCard(function(c) return c:IsSetCard(0x3440) or c:IsSetCard(0x6440) end,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,nil)
 end
 function c33700003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -56,15 +54,15 @@ function c33700003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c33700003.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetFieldCard(tp,LOCATION_SZONE,6) and Duel.GetFieldCard(tp,LOCATION_SZONE,7)
+	return Duel.GetTurnPlayer()==tp and Duel.GetFieldCard(tp,LOCATION_PZONE,0) and Duel.GetFieldCard(tp,LOCATION_PZONE,1)
 end
 function c33700003.spfilter(c,lsc,rsc,e,tp)
 	 local lv=c:GetLevel()
 	return lv>lsc and lv<rsc and c:IsSetCard(0x6440) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c33700003.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local lsc=Duel.GetFieldCard(tp,LOCATION_SZONE,6):GetLeftScale()
-	local rsc=Duel.GetFieldCard(tp,LOCATION_SZONE,7):GetRightScale()
+	local lsc=Duel.GetFieldCard(tp,LOCATION_PZONE,0):GetLeftScale()
+	local rsc=Duel.GetFieldCard(tp,LOCATION_PZONE,1):GetRightScale()
 	if lsc>rsc then lsc,rsc=rsc,lsc end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c33700003.spfilter,tp,LOCATION_GRAVE,0,1,nil,lsc,rsc,e,tp) end
@@ -72,8 +70,8 @@ function c33700003.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c33700003.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local lsc=Duel.GetFieldCard(tp,LOCATION_SZONE,6):GetLeftScale()
-	local rsc=Duel.GetFieldCard(tp,LOCATION_SZONE,7):GetRightScale()
+	local lsc=Duel.GetFieldCard(tp,LOCATION_PZONE,0):GetLeftScale()
+	local rsc=Duel.GetFieldCard(tp,LOCATION_PZONE,1):GetRightScale()
 	if lsc>rsc then lsc,rsc=rsc,lsc end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local cg=Duel.GetMatchingGroupCount(c33700003.spfilter,tp,LOCATION_GRAVE,0,nil,lsc,rsc,e,tp)

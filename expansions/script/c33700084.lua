@@ -1,17 +1,9 @@
 --动物朋友 北之玄武
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c33700084.initial_effect(c)
 		--xyz summon
 	c:EnableReviveLimit()
-	local e0=Effect.CreateEffect(c)
-	e0:SetDescription(aux.Stringid(33700084,0))
-	e0:SetType(EFFECT_TYPE_FIELD)
-	e0:SetCode(EFFECT_SPSUMMON_PROC)
-	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e0:SetRange(LOCATION_EXTRA)
-	e0:SetCondition(c33700084.xyzcon)
-	e0:SetOperation(c33700084.xyzop)
-	e0:SetValue(SUMMON_TYPE_XYZ)
-	c:RegisterEffect(e0)
+	Senya.AddXyzProcedureCustom(c,c33700084.xyzfilter,c33700084.xyzcheck,1,2)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -34,53 +26,20 @@ function c33700084.initial_effect(c)
 	e1:SetTarget(c33700084.drtg)
 	e1:SetOperation(c33700084.drop)
 	c:RegisterEffect(e1)
-   --
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(33700084,1))
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_SPSUMMON_PROC)
-	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e4:SetRange(LOCATION_EXTRA)
-	e4:SetCondition(c33700084.xyzcon2)
-	e4:SetOperation(c33700084.xyzop2)
-	e4:SetValue(SUMMON_TYPE_XYZ)
-	c:RegisterEffect(e4)
 end
-function c33700084.ffilter1(c,tp,g)
-   local race=c:GetRace()
-	local code=c:GetCode()
-   local att=c:GetAttribute()
-   return c:IsXyzLevel(g,4) and  c:IsFaceup()  and c:IsCanBeXyzMaterial(g) and  Duel.IsExistingMatchingCard(c33700084.ffilter2,tp,LOCATION_MZONE,0,1,c,race,code,att,g)
+function c33700084.xyzfilter(c,xyzc)
+	return c:IsXyzLevel(xyzc,4) or (c:IsSummonableCard() and c:IsSetCard(0x442))
 end
-function c33700084.ffilter2(c,race,code,att,g)
-	 return c:IsXyzLevel(g,4) and c:IsFaceup() and  c:GetCode()~=code and c:GetRace()~=race and c:GetAttribute()~=att and c:IsCanBeXyzMaterial(g)
-end
-function c33700084.xyzcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and Duel.IsExistingMatchingCard(c33700084.ffilter1,tp,LOCATION_MZONE,0,1,nil,tp,c)
-end
-function c33700084.xyzop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g1=Duel.SelectMatchingCard(tp,c33700084.ffilter1,tp,LOCATION_MZONE,0,1,1,nil,tp,c)
-	local g2=Duel.SelectMatchingCard(tp,c33700084.ffilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst(),g1:GetFirst():GetRace(),g1:GetFirst():GetCode(),g1:GetFirst():GetAttribute(),c)
-	g1:Merge(g2)
-	c:SetMaterial(g1)
-   Duel.Overlay(c,g1)
-end
-function c33700084.ovfilter(c,g)
-	return c:IsFaceup() and c:IsSetCard(0x442) and c:IsSummonableCard() and  c:IsCanBeXyzMaterial(g)
-end
-function c33700084.xyzcon2(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c33700084.ovfilter,tp,LOCATION_MZONE,0,1,nil,c)
-end
-function c33700084.xyzop2(e,tp,eg,ep,ev,re,r,rp,c)
-	local g1=Duel.SelectMatchingCard(tp,c33700084.ovfilter,tp,LOCATION_MZONE,0,1,1,nil,c)
-	c:SetMaterial(g1)
-   Duel.Overlay(c,g1)
+function c33700084.xyzcheck(g,xyzc)
+	if g:GetCount()==1 then
+		local tc=g:GetFirst()
+		return tc:IsSummonableCard() and tc:IsSetCard(0x442)
+	else
+		if g:IsExists(function(c) return not c:IsXyzLevel(xyzc,4) end,1,nil) then return false end
+		local tc1=g:GetFirst()
+		local tc2=g:GetNext()
+		return not (tc1:IsCode(tc2:GetCode()) or tc1:IsAttribute(tc2:GetAttribute()) or tc1:IsRace(tc2:GetRace()))
+	end
 end
 function c33700084.indcon(e)
 	 local g=Duel.GetMatchingGroup(nil,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)

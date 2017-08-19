@@ -45,7 +45,7 @@ function c2100002.desop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsPosition(POS_FACEUP_ATTACK) then
-		if Duel.ChangePosition(c,POS_FACEUP_DEFENCE)~=0 then
+		if Duel.ChangePosition(c,POS_FACEUP_DEFENSE)~=0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local g=Duel.SelectMatchingCard(tp,c2100002.filter2,tp,0,LOCATION_ONFIELD,1,1,nil)
 			if g:GetCount()>0 then

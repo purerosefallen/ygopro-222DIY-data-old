@@ -70,9 +70,7 @@ function c33700024.seop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function c33700024.con(e,tp,eg,ep,ev,re,r,rp)
-	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-	return tc and tc:IsSetCard(0x3440) and e:GetHandler():GetRightScale()~=11 and  e:GetHandler():GetLeftScale()~=11 
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0x3440) and e:GetHandler():GetRightScale()~=11 and e:GetHandler():GetLeftScale()~=11 
 end
 function c33700024.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

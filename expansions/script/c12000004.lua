@@ -38,27 +38,38 @@ function c12000004.initial_effect(c)
 	
 end
 function c12000004.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsSetCard(0xfbe)
+	return c:IsAbleToHand() and c:IsSetCard(0xfbe)
 end
 function c12000004.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c12000004.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c12000004.filter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c12000004.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,563)
-	local rc=Duel.AnnounceRace(tp,1,RACE_ALL-g:GetFirst():GetRace())
-	e:SetLabel(rc)
+	if chk==0 then return Duel.IsExistingMatchingCard(c12000004.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
 end
 function c12000004.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and c:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_RACE)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(e:GetLabel())
-		tc:RegisterEffect(e1)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c12000004.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local tg=g:GetFirst()
+	if tg==nil then return end
+	Duel.Remove(tg,POS_FACEDOWN,REASON_EFFECT)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetRange(LOCATION_REMOVED)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCountLimit(1)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,1)
+	e1:SetCondition(c12000004.thcon)
+	e1:SetOperation(c12000004.thop)
+	e1:SetLabel(0)
+	tg:RegisterEffect(e1)
+end
+function c12000004.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
+function c12000004.thop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=e:GetLabel()
+	e:GetHandler():SetTurnCounter(ct+1)
+	if ct==0 then
+		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,e:GetHandler())
 	end
 end
 function c12000004.spcon(e,tp,eg,ep,ev,re,r,rp)

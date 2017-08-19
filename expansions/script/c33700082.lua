@@ -85,7 +85,10 @@ function c33700082.lkfilter1(c,lc,tp)
 end
 function c33700082.lkfilter2(c,lc,mc,tp)
 	local mg=Group.FromCards(c,mc)
-	return c:IsFaceup() and c:IsCanBeLinkMaterial(lc) and not c:IsCode(mc:GetCode()) and Duel.GetLocationCountFromEx(tp,tp,mg,lc)>0
+	return c:IsFaceup() and c:IsCanBeLinkMaterial(lc) and Duel.GetLocationCountFromEx(tp,tp,mg,lc)>0
+		and not c:IsCode(mc:GetCode())
+		and not c:IsRace(mc:GetRace())
+		and not c:IsAttribute(mc:GetAttribute())
 end
 function c33700082.lkcon(e,c)
 	if c==nil then return true end

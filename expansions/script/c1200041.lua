@@ -57,15 +57,15 @@ function c1200041.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(cg,REASON_COST)
 end
 function c1200041.spfilter(c,e,tp)
-	return c:IsCode(0xfba) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xfba) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(1200041)
 end
 function c1200041.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c1200041.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(c1200041.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,0,1,0,0)
 end
 function c1200041.spop(e,tp,eg,ep,ev,re,r,rp,chk)
-	if not Duel.IsExistingTarget(c1200041.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) then return false end
+	if not Duel.IsExistingMatchingCard(c1200041.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) then return false end
 	local sg=Duel.SelectMatchingCard(tp,c1200041.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if sg:GetCount()>0 then
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)

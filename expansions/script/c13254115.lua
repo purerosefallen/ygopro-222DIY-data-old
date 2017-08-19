@@ -35,10 +35,14 @@ function c13254115.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil)==3
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
 	local sg=g:Filter(Card.IsSetCard,nil,0x356)
-	local rg=g:Sub(sg)
-	Duel.DisableShuffleCheck()
-	Duel.Remove(sg,POS_FACEUP,REASON_COST)
-	Duel.Remove(rg,POS_FACEDOWN,REASON_COST)
+	if sg:GetCount()>0 then
+		Duel.DisableShuffleCheck()
+		Duel.Remove(sg,POS_FACEUP,REASON_COST)
+		g:Sub(sg)
+		if g:GetCount()>0 then
+			Duel.Remove(g,POS_FACEDOWN,REASON_COST)
+		end
+	end
 end
 function c13254115.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_GRAVE and chkc:IsAbleToRemove() end
@@ -48,18 +52,19 @@ function c13254115.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
 end
 function c13254115.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFirstTarget()
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+	end
 end
 function c13254115.refilter(c)
-	return c:IsFaceup() and c:IsAbleToRemove()
+	return c:IsAbleToRemove()
 end
 function c13254115.retg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c13254115.refilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c13254115.refilter,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c13254115.refilter,tp,0,LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,c13254115.refilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,c13254115.refilter,tp,0,LOCATION_GRAVE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c13254115.reop(e,tp,eg,ep,ev,re,r,rp)

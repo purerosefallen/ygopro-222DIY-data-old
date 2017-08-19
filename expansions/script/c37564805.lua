@@ -4,6 +4,7 @@ local cm=_G["c"..m]
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.fusion_att_3L=ATTRIBUTE_LIGHT
 function cm.initial_effect(c)
+	Senya.AddSummonMusic(c,m*16,SUMMON_TYPE_FUSION)
 	Senya.Fusion_3L_Attribute(c,cm)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)

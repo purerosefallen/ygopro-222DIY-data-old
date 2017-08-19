@@ -50,9 +50,12 @@ end
 function c17060832.synfilter(c)
 	return c17060832.IsSinger_Arthur(c)
 end
+function c17060832.atkfilter(c)
+	return c17060832.IsMillion_Arthur(c)
+end
 function c17060832.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	return at:IsControler(tp) and c17060832.IsMillion_Arthur(c)
+	return at:IsControler(tp) and c17060832.atkfilter(at)
 end
 function c17060832.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -68,7 +71,7 @@ function c17060832.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_PIERCE)
 		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e2)
+		at:RegisterEffect(e2)
 	end
 end
 function c17060832.spcon(e,tp,eg,ep,ev,re,r,rp)
