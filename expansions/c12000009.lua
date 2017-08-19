@@ -22,16 +22,16 @@ function c12000009.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c12000009.cfilter(c)
-	return c:IsSetCard(0xfbe) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0xfbe) and c:IsAbleToGraveAsCost()
 end
 function c12000009.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12000009.cfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c12000009.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	Duel.SendtoGrave(g,POS_FACEUP,REASON_COST)
 end
 function c12000009.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemove()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemove() and c:IsFaceup()
 end
 function c12000009.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c12000009.filter(chkc) and chkc~=e:GetHandler() end

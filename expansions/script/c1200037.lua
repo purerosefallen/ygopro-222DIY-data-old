@@ -32,8 +32,8 @@ function c1200037.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xfbc) and c:IsReleasable()
 end
 function c1200037.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1200037.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
-	local cg=Duel.SelectMatchingCard(tp,c1200037.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(c1200037.cfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,LOCATION_ONFIELD,1,e:GetHandler()) end
+	local cg=Duel.SelectMatchingCard(tp,c1200037.cfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,LOCATION_ONFIELD,1,1,e:GetHandler())
 	Duel.SendtoGrave(cg,REASON_COST+REASON_RELEASE)
 end
 function c1200037.target(e,tp,eg,ep,ev,re,r,rp,chk)
