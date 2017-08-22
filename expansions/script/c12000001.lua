@@ -87,20 +87,20 @@ function c12000001.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonComplete()
 	end
 end
-function c12000001.thfilter(c,lv,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:GetLevel()==lv and c:IsAbleToHand()
+function c12000001.thfilter(c,lv,race)
+	return c:IsType(TYPE_MONSTER) and c:GetLevel()==lv and c:GetRace()==race and c:IsAbleToHand()
 end
 function c12000001.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0xfbe) and Duel.IsExistingMatchingCard(c12000001.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),e,tp)
+	return c:IsFaceup() and c:IsSetCard(0xfbe) and Duel.IsExistingMatchingCard(c12000001.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),c:GetRace())
 end
-function c12000001.chkfilter(c,lv)
+function c12000001.chkfilter(c,lv,race)
 	return c:IsFaceup() and c:GetLevel()==lv
 end
 function c12000001.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and c12000001.chkfilter(chkc,e:GetLabel()) end
-	if chk==0 then return Duel.IsExistingTarget(c12000001.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,e,tp) end
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and c42000001.chkfilter(chkc,e:GetLabel()) end
+	if chk==0 then return Duel.IsExistingTarget(c12000001.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c12000001.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c12000001.filter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	e:SetLabel(g:GetFirst():GetAttribute())
 end
@@ -108,8 +108,9 @@ function c12000001.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) then return end
 	local lv=tc:GetLevel()
+	local race=tc:GetRace()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local sg=Duel.SelectMatchingCard(tp,c12000001.thfilter,tp,LOCATION_DECK,0,1,1,nil,lv,e,tp)
+	local sg=Duel.SelectMatchingCard(tp,c12000001.thfilter,tp,LOCATION_DECK,0,1,1,nil,lv,race)
 	if sg:GetCount()>0 then
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)

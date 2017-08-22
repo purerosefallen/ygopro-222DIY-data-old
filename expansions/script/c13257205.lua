@@ -38,6 +38,14 @@ function c13257205.initial_effect(c)
 	e4:SetCost(c13257205.atkcost)
 	e4:SetOperation(c13257205.atkop)
 	c:RegisterEffect(e4)
+	local e12=Effect.CreateEffect(c)
+	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e12:SetCode(EVENT_SUMMON_SUCCESS)
+	e12:SetOperation(c13257205.bgmop)
+	c:RegisterEffect(e12)
+	local e13=e12:Clone()
+	e13:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e13)
 	
 end
 function c13257205.ntcon(e,c,minc)
@@ -75,4 +83,7 @@ function c13257205.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e6:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e6)
 	end
+end
+function c13257205.bgmop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(11,0,aux.Stringid(13257205,4))
 end

@@ -13,7 +13,7 @@ function c13257208.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x15))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x353))
 	e2:SetValue(500)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
@@ -25,7 +25,7 @@ function c13257208.initial_effect(c)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x15))
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x353))
 	e4:SetValue(c13257208.indval)
 	c:RegisterEffect(e4)
 	--cannot be target
@@ -35,7 +35,7 @@ function c13257208.initial_effect(c)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e5:SetRange(LOCATION_FZONE)
 	e5:SetTargetRange(LOCATION_MZONE,0)
-	e5:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x15))
+	e5:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x353))
 	e5:SetValue(aux.tgoval)
 	c:RegisterEffect(e5)
 	--spsummon
@@ -62,7 +62,7 @@ function c13257208.initial_effect(c)
 	
 end
 function c13257208.thfilter(c)
-	return c:IsCode(511000019) and c:IsAbleToHand()
+	return (c:IsCode(13257209) or c:IsCode(13257211)) and c:IsAbleToHand()
 end
 function c13257208.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -78,7 +78,7 @@ function c13257208.indval(e,re,rp)
 	return rp~=e:GetHandlerPlayer()
 end
 function c13257208.spfilter(c,e,tp)
-	return c:IsSetCard(0x15) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x353) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c13257208.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -94,7 +94,7 @@ function c13257208.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c13257208.cfilter(c,tp)
-	return c:GetPreviousControler()==tp and (c:IsReason(REASON_BATTLE) or (c:GetReasonPlayer()~=tp and c:IsReason(REASON_EFFECT)))
+	return c:GetPreviousControler()==tp and c:IsSetCard(0x353) and (c:GetReasonPlayer()~=tp and c:IsReason(REASON_EFFECT))
 		and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function c13257208.drcon(e,tp,eg,ep,ev,re,r,rp)

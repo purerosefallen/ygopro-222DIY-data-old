@@ -24,7 +24,7 @@ function c13257209.initial_effect(c)
 	
 end
 function c13257209.filter(c)
-	return c:IsSetCard(0x15) and c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsCanAddCounter(0x1f,3)
+	return c:IsSetCard(0x353) and c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsCanAddCounter(0x1f,3)
 end
 function c13257209.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsOnField() and c13257209.filter(chkc) end 

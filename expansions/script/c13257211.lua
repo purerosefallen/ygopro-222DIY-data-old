@@ -66,7 +66,7 @@ function c13257211.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c13257211.chkfilter(c,tp)
-	return c:IsSetCard(0x15) and c:IsReason(REASON_DESTROY) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
+	return c:IsSetCard(0x353) and c:IsReason(REASON_DESTROY) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function c13257211.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(c13257211.chkfilter,1,nil,tp) then
@@ -77,7 +77,7 @@ function c13257211.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(13257211)~=0
 end
 function c13257211.filter(c,e,tp)
-	return c:IsSetCard(0x15) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x353) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c13257211.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

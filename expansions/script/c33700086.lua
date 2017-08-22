@@ -38,9 +38,12 @@ function c33700086.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c33700086.filter,tp,LOCATION_GRAVE,0,nil)
 	local tc=g:GetFirst() 
 	while tc do
+	   if tc:GetFlagEffect(33700086)==0 then
 	   local code=tc:GetOriginalCode()
-		local reset_flag=RESET_EVENT+0x1fe0000
+		local reset_flag=RESET_EVENT+0x1fe0000+RESET_CHAIN+RESET_PHASE
 		e:GetHandler():CopyEffect(code,reset_flag,1)
+		tc:RegisterFlagEffect(33700086,RESET_EVENT+RESET_CHAIN+RESET_PHASE,0,1)
+end
    tc=g:GetNext()
 end
 end

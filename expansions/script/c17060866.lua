@@ -48,17 +48,17 @@ function c17060866.IsMillion_Arthur(c)
 	return m and m.is_named_with_Million_Arthur
 end
 function c17060866.copyfilter(c)
-	return c:IsFaceup() and not c:IsDisabled() and (c:GetSequence()==6 or c:GetSequence()==7)
+	return c:IsFaceup()
 end
 function c17060866.necost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(17060866)==0 end
 	e:GetHandler():RegisterFlagEffect(17060866,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c17060866.netg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(1-tp) and c17060866.copyfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c17060866.copyfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and c17060866.copyfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c17060866.copyfilter,tp,LOCATION_PZONE,LOCATION_PZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c17060866.copyfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,c17060866.copyfilter,tp,LOCATION_PZONE,LOCATION_PZONE,1,1,nil)
 end
 function c17060866.neop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -83,12 +83,11 @@ function c17060866.neop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetValue(RESET_TURN_SET)
 		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3)
-		if not tc:IsType(TYPE_TRAPMONSTER) then
-		local code=tc:GetOriginalCode()
-			c:CopyEffect(code,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
-		end
+		local code1=tc:GetOriginalCode()
+		c:CopyEffect(code1,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
 	end
 end
+
 function c17060866.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsReason(REASON_DRAW)
 end
@@ -97,13 +96,16 @@ function c17060866.pcfilter(c)
 end
 function c17060866.pentg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c17060866.pcfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c17060866.pcfilter,tp,LOCATION_MZONE,0,1,nil)
-	and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
+		and Duel.IsExistingTarget(c17060866.pcfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local g=Duel.SelectTarget(tp,c17060866.pcfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c17060866.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
+		or not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) then return end
 	if Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)~=0 then

@@ -11,10 +11,10 @@ function c13254119.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Activate
 	local e2=e1:Clone()
-	e2:SetDescription(aux.Stringid(13254094,1))
+	e2:SetDescription(aux.Stringid(13254119,1))
 	e2:SetHintTiming(0,0x1e0)
-	e2:SetTarget(c13254094.target1)
-	e2:SetOperation(c13254094.activate1)
+	e2:SetTarget(c13254119.target1)
+	e2:SetOperation(c13254119.activate1)
 	c:RegisterEffect(e2)
 	
 end

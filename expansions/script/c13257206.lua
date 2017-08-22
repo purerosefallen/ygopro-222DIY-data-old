@@ -53,6 +53,14 @@ function c13257206.initial_effect(c)
 	e6:SetTarget(c13257206.tdtg)
 	e6:SetOperation(c13257206.tdop)
 	c:RegisterEffect(e6)
+	local e12=Effect.CreateEffect(c)
+	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e12:SetCode(EVENT_SUMMON_SUCCESS)
+	e12:SetOperation(c13257206.bgmop)
+	c:RegisterEffect(e12)
+	local e13=e12:Clone()
+	e13:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e13)
 	
 end
 function c13257206.sprcon(e,c)
@@ -89,7 +97,7 @@ function c13257206.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c13257206.tdfilter(c)
-	return c:IsSetCard(0x15) and c:IsAbleToDeck()
+	return c:IsSetCard(0x353) and c:IsAbleToDeck()
 end
 function c13257206.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c13257206.tdfilter,tp,LOCATION_GRAVE,0,1,nil) end
@@ -99,4 +107,7 @@ end
 function c13257206.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c13257206.tdfilter,tp,LOCATION_GRAVE,0,nil)
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+end
+function c13257206.bgmop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(11,0,aux.Stringid(13257206,4))
 end

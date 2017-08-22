@@ -27,7 +27,7 @@ function c12000007.cfilter(c)
 end
 function c12000007.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12000007.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,c12000007.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c12000007.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c12000007.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

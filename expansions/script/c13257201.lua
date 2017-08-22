@@ -41,6 +41,14 @@ function c13257201.initial_effect(c)
 	e4:SetCost(c13257201.atkcost)
 	e4:SetOperation(c13257201.atkop)
 	c:RegisterEffect(e4)
+	local e12=Effect.CreateEffect(c)
+	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e12:SetCode(EVENT_SUMMON_SUCCESS)
+	e12:SetOperation(c13257201.bgmop)
+	c:RegisterEffect(e12)
+	local e13=e12:Clone()
+	e13:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e13)
 	
 end
 function c13257201.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -71,4 +79,7 @@ function c13257201.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 	end
+end
+function c13257201.bgmop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(11,0,aux.Stringid(13257201,4))
 end

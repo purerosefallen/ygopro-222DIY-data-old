@@ -15,14 +15,14 @@ function c13257217.initial_effect(c)
 	e2:SetCategory(CATEGORY_COUNTER)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetOperation(c13257215.ctop)
+	e2:SetOperation(c13257217.ctop)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 	--remove
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(13257203,1))
+	e4:SetDescription(aux.Stringid(13257217,1))
 	e4:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_POSITION)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
@@ -37,30 +37,30 @@ function c13257217.initial_effect(c)
 	c:RegisterEffect(e4)
 	
 end
-function c13257202.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c13257217.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReason(REASON_EFFECT+REASON_BATTLE)
 		and e:GetHandler():GetCounter(0x1f)>0 end
 	return true
 end
-function c13257202.desrepop(e,tp,eg,ep,ev,re,r,rp)
+function c13257217.desrepop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveCounter(ep,0x1f,1,REASON_EFFECT)
 end
-function c13257202.ctop(e,tp,eg,ep,ev,re,r,rp)
+function c13257217.ctop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x1f,3)
 end
-function c13257202.poscon(e,tp,eg,ep,ev,re,r,rp)
+function c13257217.poscon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
-function c13257202.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c13257217.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1f,1,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x1f,1,REASON_COST)
 end
-function c13257202.postg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c13257217.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 end
-function c13257202.posop(e,tp,eg,ep,ev,re,r,rp)
+function c13257217.posop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
 	if g:GetCount()>0 then
 		Duel.ChangePosition(sg,POS_FACEUP_DEFENSE,0,POS_FACEUP_ATTACK,0)
@@ -78,4 +78,7 @@ function c13257202.posop(e,tp,eg,ep,ev,re,r,rp)
 			sc=g:GetNext()
 		end
 	end
+end
+function c13257217.bgmop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(11,0,aux.Stringid(13257217,4))
 end

@@ -51,7 +51,7 @@ function c12000009.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c12000009.thfilter(c)
-	return c:IsSetCard(0xfbe) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0xfbe) and c:IsAbleToHand()
 end
 function c12000009.cfilter3(c,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_TOKEN) and Duel.IsExistingMatchingCard(c12000009.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetAttribute(),c:GetRace())
