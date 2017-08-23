@@ -1,7 +1,8 @@
 --动物朋友 我的朋友
 local m=33700501
 local cm=_G["c"..m]
-cm.dfc_front_side=m+1
+cm.dfc_front_side=m
+cm.dfc_back_side=m+1
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -55,13 +56,13 @@ function cm.initial_effect(c)
 	end)
 	e4:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
-		if chk==0 then return c.dfc_front_side and c.dfc_front_side~=c:GetOriginalCode() end
+		if chk==0 then return c.dfc_back_side and c.dfc_front_side==c:GetOriginalCode() end
 		Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	end)
 	e4:SetOperation(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
 		if not c:IsRelateToEffect(e) or c:IsFacedown() or c:IsImmuneToEffect(e) then return end
-		local tcode=c.dfc_front_side
+		local tcode=c.dfc_back_side
 		c:SetEntityCode(tcode,true)
 		c:ReplaceEffect(tcode,0,0)
 	end)
