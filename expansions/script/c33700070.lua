@@ -37,6 +37,7 @@ function c33700070.initial_effect(c)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetLabel(22)
+	effect_list[22]=e4
 	e4:SetCondition(c33700070.actcon)
 	e4:SetOperation(c33700070.actop)
 	c:RegisterEffect(e4)

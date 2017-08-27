@@ -39,6 +39,7 @@ function c33700055.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(c33700055.effcon)
 	e4:SetLabel(15)
+	effect_list[15]=e4
 	e4:SetValue(c33700055.efilter)
 	c:RegisterEffect(e4)
 	--atk

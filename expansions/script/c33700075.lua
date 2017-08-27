@@ -29,6 +29,7 @@ function c33700075.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
    e4:SetCode(EVENT_CHAINING)
    e4:SetLabel(12)
+	effect_list[12]=e4
 	e4:SetCondition(c33700075.con2)
 	e4:SetTarget(c33700075.tg)
 	e4:SetOperation(c33700075.op)
@@ -48,6 +49,7 @@ function c33700075.initial_effect(c)
    local e6=e4:Clone()
 	e6:SetDescription(aux.Stringid(33700075,2))
 	e6:SetLabel(21)
+	effect_list[21]=e6
 	e6:SetCondition(c33700075.con3)
 	c:RegisterEffect(e6)
 end

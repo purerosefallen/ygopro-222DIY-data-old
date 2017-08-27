@@ -44,6 +44,7 @@ function c33700104.initial_effect(c)
 	e5:SetCode(EFFECT_SET_BASE_ATTACK)
 	e5:SetValue(4000)
 	e5:SetLabel(15)
+	effect_list[15]=e5
 	e5:SetCondition(c33700104.effcon)
 	c:RegisterEffect(e5)
 	local e6=e5:Clone()

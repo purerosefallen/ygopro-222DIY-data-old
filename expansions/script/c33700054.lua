@@ -33,6 +33,7 @@ function c33700054.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1)
 	e3:SetLabel(22)
+	effect_list[22]=e3
 	e3:SetCondition(c33700054.effcon2)
 	e3:SetTarget(c33700054.htg)
 	e3:SetOperation(c33700054.hop)

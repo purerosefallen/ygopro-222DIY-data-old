@@ -42,6 +42,7 @@ function c33700088.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetLabel(21)
+	effect_list[21]=e4
 	e4:SetCondition(c33700088.effcon2)
 	e4:SetTarget(c33700088.destg)
 	e4:SetOperation(c33700088.desop)
