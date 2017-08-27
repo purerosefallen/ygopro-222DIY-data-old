@@ -42,12 +42,11 @@ function c710237.initial_effect(c)
 	e5:SetTarget(c710237.eqtg)
 	e5:SetOperation(c710237.eqop)
 	c:RegisterEffect(e5)
-	--SpecialSummon
+	--spsummon
 	local e6=Effect.CreateEffect(c)
 	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetRange(LOCATION_GRAVE)
-	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e6:SetCountLimit(1,710237)
 	e6:SetTarget(c710237.sptg)
 	e6:SetOperation(c710237.spop)
@@ -125,35 +124,31 @@ function c710237.eqop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)  
 end
 
-function c710237.spfilter1(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==4
+function c710237.spfilter1(c)
+	return c710237.IsRelic(c) 
 end
 function c710237.spfilter2(c)
 	return c:IsType(TYPE_EQUIP)
 end
 function c710237.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c710237.spfilter1(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c710237.spfilter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
 		and Duel.IsExistingMatchingCard(c710237.spfilter2,tp,LOCATION_HAND,0,1,nil) 
-		and e:GetHandler():IsAbleToDeck() 
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,710237,c710237.spfilter1,0x1001,500,0,2,RACE_WARRIOR,ATTRIBUTE_EARTH)
 	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c710237.spfilter1,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c710237.spop(e,tp,eg,ep,ev,re,r,rp)
-	local ex,g1=Duel.GetOperationInfo(0,CATEGORY_SPECIAL_SUMMON)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		if Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_EFFECT)>0 and 
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-			local g=Duel.SelectMatchingCard(tp,c710237.spfilter2,tp,LOCATION_HAND,0,1,1,nil)
-			if g:GetCount()>0 then
-				Duel.BreakEffect()
-				Duel.SendtoGrave(g,REASON_EFFECT)
-			end
-		end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,710237,c710237.spfilter1,0x11,500,0,2,RACE_WARRIOR,ATTRIBUTE_EARTH) then
+		c:AddMonsterAttribute(TYPE_NORMAL)
+		Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
+		c:AddMonsterAttributeComplete()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,c710237.spfilter2,tp,LOCATION_HAND,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.BreakEffect()
+			Duel.SendtoGrave(g,REASON_EFFECT)  
+		end 
 	end
 end

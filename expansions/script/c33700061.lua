@@ -1,5 +1,7 @@
 --动物朋友 野生解放
 function c33700061.initial_effect(c)
+	c33700061[c]={}
+	local effect_list=c33700061[c]
 	  --Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

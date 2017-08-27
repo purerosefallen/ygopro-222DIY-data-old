@@ -1,5 +1,7 @@
 --动物朋友 狮子
 function c33700088.initial_effect(c)
+	c33700088[c]={}
+	local effect_list=c33700088[c]
 	   --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -18,6 +20,7 @@ function c33700088.initial_effect(c)
 	e2:SetCountLimit(1)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetLabel(5)
+	effect_list[5]=e2
 	e2:SetCondition(c33700088.effcon)
 	e2:SetTarget(c33700088.sptg)
 	e2:SetOperation(c33700088.spop)
@@ -81,7 +84,7 @@ function c33700088.aclimit(e,re,tp)
 end
 function c33700088.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700088.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or  Duel.IsExistingMatchingCard(c33700088.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or  e:GetLabel()==33700090
 end
 function c33700088.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE,0)>0  end
@@ -103,7 +106,7 @@ end
 function c33700088.actcon(e)
 	local g=Duel.GetMatchingGroup(c33700088.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and (g:GetClassCount(Card.GetCode)>=12  or  Duel.IsExistingMatchingCard(c33700081.jfilter,tp,LOCATION_SZONE,0,1,nil)) and Duel.GetTurnPlayer()==e:GetHandlerPlayer() 
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and (g:GetClassCount(Card.GetCode)>=12  or  e:GetLabel()==33700090) and Duel.GetTurnPlayer()==e:GetHandlerPlayer() 
 end
 function c33700088.limit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)

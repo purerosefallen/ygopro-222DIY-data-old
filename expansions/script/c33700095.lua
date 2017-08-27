@@ -1,5 +1,7 @@
 --动物朋友 美洲红鹮
 function c33700095.initial_effect(c)
+	c33700095[c]={}
+	local effect_list=c33700095[c]
 		--tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -16,6 +18,7 @@ function c33700095.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetLabel(7)
+	effect_list[7]=e2
 	e2:SetCondition(c33700095.effcon)
 	e2:SetTarget(c33700095.tg)
 	e2:SetTargetRange(0,LOCATION_MZONE)
@@ -27,6 +30,7 @@ function c33700095.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetTargetRange(0,LOCATION_MZONE)
 	e3:SetValue(-700)
+	effect_list[3]=e3
 	e3:SetCondition(c33700095.atkcon)
 	c:RegisterEffect(e3)
   --Destroy
@@ -85,11 +89,11 @@ function c33700095.jfilter(c)
 end
 function c33700095.atkcon(e)
 	local g=Duel.GetMatchingGroup(c33700095.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=3 or Duel.IsExistingMatchingCard(c33700095.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=3 or e:GetLabel()==33700090
 end
 function c33700095.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700095.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700095.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090
 end
 function c33700095.tg(e,c)
    local g1,g2=Duel.GetMatchingGroup(Card.IsFaceup,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetMaxGroup(Card.GetAttack,nil)

@@ -1,5 +1,7 @@
 --动物朋友 白犀
 function c33700092.initial_effect(c)
+	c33700092[c]={}
+	local effect_list=c33700092[c]
 	   --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(33700092,0))
@@ -16,6 +18,7 @@ function c33700092.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetCondition(c33700092.recon)
+	effect_list[5]=e2
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x442))
 	e2:SetValue(800)
 	c:RegisterEffect(e2)
@@ -24,6 +27,7 @@ function c33700092.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e3:SetCode(EVENT_BATTLED)
 	e3:SetRange(LOCATION_MZONE)
+	effect_list[12]=e3
 	e3:SetCondition(c33700092.condition)
 	e3:SetOperation(c33700092.operation2)
 	c:RegisterEffect(e3)
@@ -33,6 +37,7 @@ function c33700092.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
+	effect_list[4]=e4
 	e4:SetCost(c33700092.hdcon)
 	e4:SetTarget(c33700092.hdtg)
 	e4:SetOperation(c33700092.hdop)
@@ -81,11 +86,11 @@ function c33700092.jfilter(c)
 end
 function c33700092.recon(e)
 	  local g=Duel.GetMatchingGroup(c33700092.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=5  or Duel.IsExistingMatchingCard(c33700092.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=5  or e:GetLabel()==33700090
 end
 function c33700092.condition(e)
 	  local g=Duel.GetMatchingGroup(c33700092.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=12  or Duel.IsExistingMatchingCard(c33700092.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=12  or e:GetLabel()==33700090
 end
 function c33700092.hdcon(e)
 	  local g=Duel.GetMatchingGroup(c33700092.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)

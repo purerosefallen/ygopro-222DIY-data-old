@@ -68,6 +68,21 @@ function c710251.IsTheLostSpirit(c)
 	end
 	return mt and mt.is_named_with_TheLostSpirit
 end
+function c710251.IsRelic(c)
+	local code=c:GetCode()
+	local mt=_G["c"..code]
+	if not mt then
+		_G["c"..code]={}
+		if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
+			mt=_G["c"..code]
+			_G["c"..code]=nil
+		else
+			_G["c"..code]=nil
+			return false
+		end
+	end
+	return mt and mt.is_named_with_Relic
+end
 
 function c710251.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsAbleToHand() end
@@ -90,7 +105,7 @@ function c710251.eqcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp)
 end
 function c710251.eqfilter(c,ec)
-	return c:IsType(TYPE_EQUIP) and c:CheckEquipTarget(ec) and c710250.IsTheLostSpirit(c)
+	return c:IsType(TYPE_EQUIP) and c710251.IsRelic(c) and c:CheckEquipTarget(ec)
 end
 function c710251.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
@@ -117,7 +132,7 @@ end
 function c710251.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c710251.tdfilter(chkc) end
 	if chk==0 then return e:GetHandler():IsAbleToExtra() 
-		and Duel.IsExistingTarget(c710251.tdfilter,tp,LOCATION_GRAVE,0,1,nil) 
+		and Duel.IsExistingTarget(c710251.tdfilter,tp,LOCATION_GRAVE,0,2,nil) 
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,c710251.tdfilter,tp,LOCATION_GRAVE,0,2,2,nil)

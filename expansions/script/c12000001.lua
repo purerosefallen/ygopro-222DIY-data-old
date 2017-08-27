@@ -88,7 +88,7 @@ function c12000001.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c12000001.thfilter(c,lv,race)
-	return c:IsType(TYPE_MONSTER) and c:GetLevel()==lv and c:GetRace()==race and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:GetLevel()==lv and c:GetRace()==race and c:IsAbleToHand() and c:IsLevelAbove(5)
 end
 function c12000001.filter(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0xfbe) and Duel.IsExistingMatchingCard(c12000001.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),c:GetRace())

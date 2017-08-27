@@ -1,5 +1,7 @@
 --动物朋友 北狐
 function c33700054.initial_effect(c)
+	c33700054[c]={}
+	local effect_list=c33700054[c]
 	 --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -17,6 +19,7 @@ function c33700054.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
 	e2:SetLabel(3)
+	effect_list[3]=e2
 	e2:SetCondition(c33700054.drcon)
 	e2:SetTarget(c33700054.drtg)
 	e2:SetOperation(c33700054.drop)
@@ -42,6 +45,7 @@ function c33700054.initial_effect(c)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1)
 	e4:SetLabel(7)
+	effect_list[7]=e4
 	e4:SetCondition(c33700054.effcon)
 	e4:SetOperation(c33700054.op)
 	c:RegisterEffect(e4)
@@ -86,7 +90,7 @@ function c33700054.jfilter(c)
 end
 function c33700054.drcon(e,tp,eg,ep,ev,re,r,rp)
 	 local g=Duel.GetMatchingGroup(c33700054.confiltert,tp,LOCATION_GRAVE,0,nil)
-	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700054.jfilter,tp,LOCATION_SZONE,0,1,nil)) and ep~=tp
+	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090) and ep~=tp
 end
 function c33700054.confilter(c)
 	return c:IsSetCard(0x442) and c:IsFaceup() and c:IsType(TYPE_MONSTER)
@@ -103,7 +107,7 @@ function c33700054.drop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c33700054.effcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c33700054.confilter,tp,LOCATION_GRAVE,0,nil)
-	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700054.jfilter,tp,LOCATION_SZONE,0,1,nil)) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)  and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP+TYPE_SPELL) and not re:IsActiveType(TYPE_CONTINUOUS) and   re:GetHandler():IsSetCard(0x442)
+	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)  and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP+TYPE_SPELL) and not re:IsActiveType(TYPE_CONTINUOUS) and   re:GetHandler():IsSetCard(0x442)
  end
 function c33700054.effcon2(e)
 	local g=Duel.GetMatchingGroup(c33700054.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)

@@ -31,6 +31,14 @@ function c13257219.initial_effect(c)
 	e3:SetTarget(c13257219.sptg)
 	e3:SetOperation(c13257219.spop)
 	c:RegisterEffect(e3)
+	local e12=Effect.CreateEffect(c)
+	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e12:SetCode(EVENT_SUMMON_SUCCESS)
+	e12:SetOperation(c13257219.bgmop)
+	c:RegisterEffect(e12)
+	local e13=e12:Clone()
+	e13:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e13)
 	
 end
 function c13257219.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -124,4 +132,7 @@ function c13257219.spop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummonComplete()
 		end
 	end
+end
+function c13257219.bgmop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(11,0,aux.Stringid(13257219,4))
 end

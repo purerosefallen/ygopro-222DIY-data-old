@@ -57,6 +57,21 @@ function c710250.IsTheLostSpirit(c)
 	end
 	return mt and mt.is_named_with_TheLostSpirit
 end
+function c710250.IsRelic(c)
+	local code=c:GetCode()
+	local mt=_G["c"..code]
+	if not mt then
+		_G["c"..code]={}
+		if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
+			mt=_G["c"..code]
+			_G["c"..code]=nil
+		else
+			_G["c"..code]=nil
+			return false
+		end
+	end
+	return mt and mt.is_named_with_Relic
+end
 
 function c710250.remfilter(c)
 	return c:IsFaceup()
@@ -76,7 +91,7 @@ function c710250.remop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c710250.eqfilter(c,ec)
-	return c:IsType(TYPE_EQUIP) and c:CheckEquipTarget(ec) and c710250.IsTheLostSpirit(c)
+	return c:IsType(TYPE_EQUIP) and c710250.IsRelic(c) and c:CheckEquipTarget(ec)
 end
 function c710250.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -102,23 +117,26 @@ function c710250.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
 end
 function c710250.spfilter1(c,e,tp)
-	return c710250.IsTheLostSpirit(c) and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)
+	return c710250.IsTheLostSpirit(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c710250.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToDeck() end
 	if chk==0 then return e:GetHandler():IsAbleToExtra()
 		and Duel.IsExistingMatchingCard(c710250.spfilter1,tp,LOCATION_EXTRA,0,1,nil,e,tp)
+		and Duel.GetLocationCountFromEx(tp)>0
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c710250.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_EFFECT)
+	if Duel.GetLocationCountFromEx(tp,tp,c)>0 then
+		Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_EFFECT)
+	end
 	if c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g1=Duel.SelectMatchingCard(tp,c710250.spfilter1,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local tc=g1:GetFirst()
-	Duel.SpecialSummonStep(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
+	Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 	tc:CompleteProcedure()
 	Duel.SpecialSummonComplete()  
 end

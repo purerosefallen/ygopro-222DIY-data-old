@@ -1,5 +1,7 @@
 --动物朋友 豹变色龙
 function c33700070.initial_effect(c)
+	c33700070[c]={}
+	local effect_list=c33700070[c]
 	  --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -15,6 +17,7 @@ function c33700070.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_DIRECT_ATTACK)
 	e2:SetLabel(3)
+	effect_list[3]=e2
 	e2:SetCondition(c33700070.effcon)
 	c:RegisterEffect(e2)
   --direct attack all
@@ -23,6 +26,7 @@ function c33700070.initial_effect(c)
 	e3:SetCode(EFFECT_DIRECT_ATTACK)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetLabel(7)
+	effect_list[7]=e3
 	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetCondition(c33700070.effcon)
 	e3:SetTarget(c33700070.tg)
@@ -80,7 +84,7 @@ function c33700070.jfilter(c)
 end
 function c33700070.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700070.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700070.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090
 end
 function c33700070.tg(e,c)
 	return c:IsSetCard(0x442)

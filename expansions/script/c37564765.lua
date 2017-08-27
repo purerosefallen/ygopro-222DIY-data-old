@@ -2520,10 +2520,29 @@ function cm.IgnoreActionCheck(f,...)
 	local ret={}
 	while coroutine.status(cr)~="dead" do
 		local sret={coroutine.resume(cr,...)}
-		for _,v in ipairs(sret) do
-			table.insert(ret,v)
+		for i=2,#sret do
+			table.insert(ret,sret[i])
 		end
 	end
 	Duel.DisableActionCheck(false)
 	return table.unpack(ret)
+end
+--no front side common effects
+function cm.DFCBackSideCommonEffect(c)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_ADJUST)
+	e2:SetRange(LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_HAND+LOCATION_EXTRA)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return c.dfc_front_side and c:GetOriginalCode()==c.dfc_back_side
+	end)
+	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local tcode=c.dfc_front_side
+		c:SetEntityCode(tcode)
+		Duel.ConfirmCards(tp,Group.FromCards(c))
+		Duel.ConfirmCards(1-tp,Group.FromCards(c))
+		c:ReplaceEffect(tcode,0,0)
+	end)
+	c:RegisterEffect(e2)	
 end

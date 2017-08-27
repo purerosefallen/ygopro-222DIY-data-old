@@ -1,5 +1,7 @@
 --动物朋友 河马
 function c33700080.initial_effect(c)
+	c33700080[c]={}
+	local effect_list=c33700080[c]
 	  --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -16,6 +18,7 @@ function c33700080.initial_effect(c)
 	e2:SetDescription(aux.Stringid(25165047,0))
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	effect_list[5]=e2
 	e2:SetCondition(c33700080.con)
 	e2:SetTarget(c33700080.tg)
 	e2:SetOperation(c33700080.op)
@@ -64,7 +67,7 @@ function c33700080.confilter(c)
 end
 function c33700080.con(e,tp,eg,ep,ev,re,r,rp)
 	  local g=Duel.GetMatchingGroup(c33700080.confilter,tp,LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=5  or Duel.IsExistingMatchingCard(c33700080.jfilter,tp,LOCATION_SZONE,0,1,nil) 
+	return g:GetClassCount(Card.GetCode)>=5  or e:GetLabel()==33700090 
 end
 function c33700080.desfilter(c)
 	return c:IsType(TYPE_MONSTER)
@@ -89,7 +92,7 @@ function c33700080.jfilter(c)
 end
 function c33700080.op(e,tp,eg,ep,ev,re,r,rp)
    local g=Duel.GetMatchingGroup(c33700080.confilter,tp,LOCATION_GRAVE,0,nil) 
-   if g:GetClassCount(Card.GetCode)>=5  or  Duel.IsExistingMatchingCard(c33700080.jfilter,tp,LOCATION_SZONE,0,1,nil) then
+   if g:GetClassCount(Card.GetCode)>=5  or  e:GetLabel()==33700090 then
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local cg=Duel.SelectMatchingCard(tp,c33700080.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
@@ -97,7 +100,7 @@ function c33700080.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(cg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-   if g:GetClassCount(Card.GetCode)>=12  or  Duel.IsExistingMatchingCard(c33700080.jfilter,tp,LOCATION_SZONE,0,1,nil) then
+   if g:GetClassCount(Card.GetCode)>=12  or  e:GetLabel()==33700090 then
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 or  Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.ConfirmDecktop(tp,1)
 	local hg=Duel.GetDecktopGroup(tp,1)

@@ -23,7 +23,7 @@ function c13257211.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetRange(LOCATION_SZONE)
-	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCode(EVENT_LEAVE_FIELD)
 	e4:SetOperation(c13257211.checkop)
 	c:RegisterEffect(e4,0)
 	local e5=Effect.CreateEffect(c)
@@ -66,7 +66,7 @@ function c13257211.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c13257211.chkfilter(c,tp)
-	return c:IsSetCard(0x353) and c:IsReason(REASON_DESTROY) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
+	return c:IsSetCard(0x353) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function c13257211.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(c13257211.chkfilter,1,nil,tp) then

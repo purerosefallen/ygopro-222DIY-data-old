@@ -1,5 +1,7 @@
 --动物朋友 朱䴉
 function c33700077.initial_effect(c)
+	c33700077[c]={}
+	local effect_list=c33700077[c]
 	  --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -35,6 +37,7 @@ function c33700077.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
 	e4:SetLabel(7)
+	effect_list[7]=e4
 	e4:SetCondition(c33700077.effcon)
 	e4:SetTarget(c33700077.postg)
 	e4:SetOperation(c33700077.posop)
@@ -83,7 +86,7 @@ function c33700077.jfilter(c)
 end
 function c33700077.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700077.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=e:GetLabel()  or  Duel.IsExistingMatchingCard(c33700077.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=e:GetLabel()  or  e:GetLabel()==33700090
 end
 function c33700077.effcon2(e)
 	local g=Duel.GetMatchingGroup(c33700077.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)

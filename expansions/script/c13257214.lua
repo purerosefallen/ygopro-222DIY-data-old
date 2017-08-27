@@ -18,6 +18,14 @@ function c13257214.initial_effect(c)
 	e3:SetCost(c13257214.spcost)
 	e3:SetOperation(c13257214.spcop)
 	c:RegisterEffect(e3)
+	--indes
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetValue(c13257214.indct)
+	c:RegisterEffect(e4)
 	local e12=Effect.CreateEffect(c)
 	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e12:SetCode(EVENT_SUMMON_SUCCESS)
@@ -73,4 +81,9 @@ function c13257214.splimit(e,c)
 end
 function c13257214.bgmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(11,0,aux.Stringid(13257214,4))
+end
+function c13257214.indct(e,re,r,rp)
+	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
+		return 1
+	else return 0 end
 end

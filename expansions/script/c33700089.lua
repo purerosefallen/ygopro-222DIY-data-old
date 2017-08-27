@@ -1,5 +1,7 @@
 --动物朋友 驼鹿
 function c33700089.initial_effect(c)
+	c33700089[c]={}
+	local effect_list=c33700089[c]
    --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -17,6 +19,7 @@ function c33700089.initial_effect(c)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetCondition(c33700089.atkcon)
+	effect_list[3]=e2
 	e2:SetTarget(c33700089.atktg)
 	e2:SetValue(500)
 	c:RegisterEffect(e2)
@@ -28,6 +31,7 @@ function c33700089.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(0,1)
 	e3:SetCondition(c33700089.actcon)
+	effect_list[12]=e3
 	e3:SetValue(c33700089.limit)
 	c:RegisterEffect(e3)
 	--Destroy
@@ -83,7 +87,7 @@ function c33700089.jfilter(c)
 end
 function c33700089.atkcon(e)
 	local g=Duel.GetMatchingGroup(c33700089.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=3  or Duel.IsExistingMatchingCard(c33700089.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=3  or e:GetLabel()==33700090
 end
 function c33700089.atktg(e,c)
    return c:IsSetCard(0x442)  and c:IsFaceup()
@@ -91,7 +95,7 @@ end
 function c33700089.actcon(e)
 	local g=Duel.GetMatchingGroup(c33700089.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and (g:GetClassCount(Card.GetCode)>=12  or Duel.IsExistingMatchingCard(c33700089.jfilter,tp,LOCATION_SZONE,0,1,nil)) and Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and (g:GetClassCount(Card.GetCode)>=12  or e:GetLabel()==33700090) and Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
 function c33700089.limit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)

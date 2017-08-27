@@ -1,5 +1,7 @@
 --动物朋友 银狐
 function c33700053.initial_effect(c)
+	c33700053[c]={}
+	local effect_list=c33700053[c]
 	--tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -17,6 +19,7 @@ function c33700053.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_DRAW)
 	e2:SetLabel(3)
+	effect_list[3]=e2
 	e2:SetCondition(c33700053.recon)
 	e2:SetOperation(c33700053.reop)
 	c:RegisterEffect(e2)
@@ -28,6 +31,7 @@ function c33700053.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
 	e3:SetLabel(7)
+	effect_list[7]=e3
 	e3:SetCondition(c33700053.effcon)
 	e3:SetTarget(c33700053.tgtg)
 	e3:SetOperation(c33700053.tgop)
@@ -88,14 +92,14 @@ function c33700053.jfilter(c)
 end
 function c33700053.recon(e,tp,eg,ep,ev,re,r,rp)
 	  local g=Duel.GetMatchingGroup(c33700053.confiltert,tp,LOCATION_GRAVE,0,nil)
-	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700053.jfilter,tp,LOCATION_SZONE,0,1,nil))  and ep==tp
+	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090)  and ep==tp
 end
 function c33700053.reop(e,tp,eg,ep,ev,re,r,rp)
    Duel.Recover(tp,ev*1000,REASON_EFFECT)
 end
 function c33700053.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700053.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700053.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090
 end
 function c33700053.effcon2(e)
 	local g=Duel.GetMatchingGroup(c33700053.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)

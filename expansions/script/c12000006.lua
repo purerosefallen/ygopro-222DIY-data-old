@@ -61,8 +61,20 @@ function c12000006.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(1)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 			token:RegisterEffect(e1,true)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_FIELD)
+			e2:SetRange(LOCATION_MZONE)
+			e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+			e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+			e2:SetAbsoluteRange(tp,1,0)
+			e2:SetTarget(c12000006.splimit)
+			e2:SetReset(RESET_EVENT+0x1fe0000)
+			g:GetFirst():RegisterEffect(e2,true)
 		end
 	end
+end
+function c12000006.splimit(e,c)
+	return not c:IsSetCard(0xfbe)
 end
 function c12000006.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

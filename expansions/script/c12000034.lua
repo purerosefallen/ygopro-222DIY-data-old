@@ -55,6 +55,9 @@ end
 function c12000034.discon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
+function c12000034.filter(c)
+	return c:IsSetCard(0xfbe) and c:IsAbleToDeck()
+end
 function c12000034.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c12000034.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c12000034.filter,tp,LOCATION_REMOVED,0,1,nil)

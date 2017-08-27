@@ -1,5 +1,7 @@
 --动物朋友 薮猫
 function c33700055.initial_effect(c)
+	c33700055[c]={}
+	local effect_list=c33700055[c]
 	--tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(41940225,1))
@@ -15,6 +17,7 @@ function c33700055.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e2:SetLabel(3)
+	effect_list[3]=e2
 	e2:SetValue(1)
 	e2:SetCondition(c33700055.effcon)
 	c:RegisterEffect(e2)
@@ -26,6 +29,7 @@ function c33700055.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(c33700055.effcon)
 	e3:SetLabel(7)
+	effect_list[7]=e3
 	c:RegisterEffect(e3)
 	--immune spell
 	local e4=Effect.CreateEffect(c)
@@ -73,7 +77,7 @@ function c33700055.jfilter(c)
 end
 function c33700055.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700055.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE+LOCATION_ONFIELD,0,nil)
-	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700055.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090
 end
 function c33700055.efilter(e,te)
 	return  te:GetOwnerPlayer()~=e:GetHandlerPlayer()

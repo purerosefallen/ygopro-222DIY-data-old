@@ -1,13 +1,14 @@
 --巨大战舰 巨核Mk-2（D）
 function c13257205.initial_effect(c)
 	c:EnableCounterPermit(0x1f)
-	--summon with no tribute
 	local e11=Effect.CreateEffect(c)
 	e11:SetDescription(aux.Stringid(13257205,1))
-	e11:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e11:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e11:SetType(EFFECT_TYPE_SINGLE)
 	e11:SetCode(EFFECT_SUMMON_PROC)
-	e11:SetCondition(c13257205.ntcon)
+	e11:SetCondition(c13257205.otcon)
+	e11:SetOperation(c13257205.otop)
+	e11:SetValue(SUMMON_TYPE_ADVANCE)
 	c:RegisterEffect(e11)
 	--Destroy replace
 	local e1=Effect.CreateEffect(c)
@@ -36,6 +37,7 @@ function c13257205.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
 	e4:SetCost(c13257205.atkcost)
+	e4:SetTarget(c13257205.atktg)
 	e4:SetOperation(c13257205.atkop)
 	c:RegisterEffect(e4)
 	local e12=Effect.CreateEffect(c)
@@ -48,10 +50,20 @@ function c13257205.initial_effect(c)
 	c:RegisterEffect(e13)
 	
 end
-function c13257205.ntcon(e,c,minc)
+function c13257205.otfilter(c)
+	return c:IsSetCard(0x353) and c:IsType(TYPE_MONSTER) and (c:IsControler(tp) or c:IsFaceup())
+end
+function c13257205.otcon(e,c,minc)
 	if c==nil then return true end
-	return minc==0 and c:GetLevel()>4 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
+	local tp=c:GetControler()
+	local mg=Duel.GetMatchingGroup(c13257205.otfilter,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil)
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1,1,mg)
+end
+function c13257205.otop(e,tp,eg,ep,ev,re,r,rp,c)
+	local mg=Duel.GetMatchingGroup(c13257205.otfilter,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil)
+	local sg=Duel.SelectTribute(tp,c,1,1,mg)
+	c:SetMaterial(sg)
+	Duel.Release(sg, REASON_SUMMON+REASON_MATERIAL)
 end
 function c13257205.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReason(REASON_EFFECT+REASON_BATTLE)
@@ -68,6 +80,10 @@ function c13257205.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1f,1,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x1f,1,REASON_COST)
 end
+function c13257205.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK)==0
+		and e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK_MONSTER)==0 end
+end
 function c13257205.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
@@ -82,6 +98,13 @@ function c13257205.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e6:SetCode(EFFECT_NO_BATTLE_DAMAGE)
 		e6:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e6)
+		local e7=Effect.CreateEffect(c)
+		e7:SetType(EFFECT_TYPE_SINGLE)
+		e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e7:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
+		e7:SetValue(1)
+		e7:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e7)
 	end
 end
 function c13257205.bgmop(e,tp,eg,ep,ev,re,r,rp)

@@ -1,5 +1,7 @@
 --动物朋友 小爪水獭
 function c33700079.initial_effect(c)
+	c33700079[c]={}
+	local effect_list=c33700079[c]
 	c:SetSPSummonOnce(33700079)
 	--tohand
 	local e1=Effect.CreateEffect(c)
@@ -18,6 +20,7 @@ function c33700079.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	effect_list[5]=e2
 	e2:SetCondition(c33700079.con)
 	e2:SetTarget(c33700079.tg)
 	e2:SetOperation(c33700079.op)
@@ -69,7 +72,7 @@ function c33700079.jfilter(c)
 end
 function c33700079.con(e,tp,eg,ep,ev,re,r,rp)
 	  local g=Duel.GetMatchingGroup(c33700079.confilter,tp,LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=5  or Duel.IsExistingMatchingCard(c33700079.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=5  or e:GetLabel()==33700090
 end
 function c33700079.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
@@ -78,10 +81,10 @@ function c33700079.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c33700079.op(e,tp,eg,ep,ev,re,r,rp)
    local g=Duel.GetMatchingGroup(c33700079.confilter,tp,LOCATION_GRAVE,0,nil) 
-   if g:GetClassCount(Card.GetCode)>=5  or Duel.IsExistingMatchingCard(c33700079.jfilter,tp,LOCATION_SZONE,0,1,nil) then
+   if g:GetClassCount(Card.GetCode)>=5  or e:GetLabel()==33700090 then
 	 Duel.Draw(tp,1,REASON_EFFECT)
 end
-   if g:GetClassCount(Card.GetCode)>=12  or  Duel.IsExistingMatchingCard(c33700079.jfilter,tp,LOCATION_SZONE,0,1,nil) then
+   if g:GetClassCount(Card.GetCode)>=12  or  e:GetLabel()==33700090 then
 	 Duel.Draw(tp,2,REASON_EFFECT)
 end
    if g:GetClassCount(Card.GetCode)>=21 and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_DECK,0,3,nil) then

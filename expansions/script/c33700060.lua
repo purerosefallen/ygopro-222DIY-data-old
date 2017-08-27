@@ -1,5 +1,7 @@
 --动物朋友 都是朋友
 function c33700060.initial_effect(c)
+	c33700060[c]={}
+	local effect_list=c33700060[c]
 	  --Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DRAW)

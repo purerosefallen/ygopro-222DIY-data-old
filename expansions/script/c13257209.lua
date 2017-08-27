@@ -48,7 +48,7 @@ end
 function c13257209.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		tc:AddCounter(0x1f,3)
+		tc:AddCounter(0x1f,1)
 	end
 end
 function c13257209.thcon(e,tp,eg,ep,ev,re,r,rp)

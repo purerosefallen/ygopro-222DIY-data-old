@@ -1,5 +1,7 @@
 --动物朋友 金丝猴
 function c33700096.initial_effect(c)
+	c33700096[c]={}
+	local effect_list=c33700096[c]
 	  --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -17,6 +19,7 @@ function c33700096.initial_effect(c)
 	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetLabel(7)
+	effect_list[7]=e2
 	e2:SetCondition(c33700096.cbcon)
 	e2:SetOperation(c33700096.cbop)
 	c:RegisterEffect(e2)  
@@ -27,6 +30,7 @@ function c33700096.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(c33700096.atkcon)
+	effect_list[3]=e3
 	e3:SetValue(500)
 	c:RegisterEffect(e3)
 	--remove
@@ -38,6 +42,7 @@ function c33700096.initial_effect(c)
 	e4:SetCondition(c33700096.recon)
 	e4:SetTarget(c33700096.retg)
 	e4:SetOperation(c33700096.reop)
+	effect_list[22]=e4
 	c:RegisterEffect(e4)
 end
 function c33700096.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -83,7 +88,7 @@ function c33700096.jfilter(c)
 end
 function c33700096.cbcon(e,tp,eg,ep,ev,re,r,rp)
    local g=Duel.GetMatchingGroup(c33700096.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-   return Duel.GetTurnPlayer()~=tp and Duel.GetAttackTarget()~=e:GetHandler() and  (g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700096.jfilter,tp,LOCATION_SZONE,0,1,nil))
+   return Duel.GetTurnPlayer()~=tp and Duel.GetAttackTarget()~=e:GetHandler() and  (g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090)
 end
 function c33700096.cbop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -96,7 +101,7 @@ function c33700096.cbop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c33700096.atkcon(e)
 	local g=Duel.GetMatchingGroup(c33700096.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=3 or Duel.IsExistingMatchingCard(c33700096.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=3 or e:GetLabel()==33700090
 end
 function c33700096.recon(e,tp,eg,ep,ev,re,r,rp)
 	 local g=Duel.GetMatchingGroup(c33700096.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)

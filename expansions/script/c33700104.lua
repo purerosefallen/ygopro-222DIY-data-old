@@ -1,5 +1,7 @@
 --动物朋友 八咫乌
 function c33700104.initial_effect(c)
+	c33700104[c]={}
+	local effect_list=c33700104[c]
 	 c:EnableCounterPermit(0x442)
 	--synchro summon
 	aux.AddSynchroProcedure2(c,nil,aux.NonTuner(nil))
@@ -56,6 +58,7 @@ function c33700104.initial_effect(c)
 	e7:SetCondition(c33700104.effcon2)
 	e7:SetValue(1)
 	e7:SetLabel(1)
+	effect_list[1]=e7
 	c:RegisterEffect(e7)
 	local e8=e7:Clone()
 	e8:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -102,11 +105,11 @@ function c33700104.con(e,tp,eg,ep,ev,re,r,rp)
 end
 function c33700104.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700104.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700104.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090
 end
 function c33700104.effcon2(e)
 	local g=Duel.GetMatchingGroup(c33700104.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or Duel.IsExistingMatchingCard(c33700104.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil))
+	return (g:GetClassCount(Card.GetCode)>=e:GetLabel() or e:GetLabel()==33700090)
 	and  Duel.IsExistingMatchingCard(c33700104.confilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
 function c33700104.ccon(e,tp,eg,ep,ev,re,r,rp)

@@ -1,5 +1,7 @@
 --动物朋友 鲸头鹳
 function c33700081.initial_effect(c)
+	c33700081[c]={}
+	local effect_list=c33700081[c]
 	  --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -16,17 +18,20 @@ function c33700081.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(c33700081.effcon)
+	effect_list[5]=e2
 	e2:SetTargetRange(0,LOCATION_MZONE)
 	e2:SetValue(c33700081.limit)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCondition(c33700081.effcon2)
 	e3:SetTargetRange(0,LOCATION_SZONE)
+	effect_list[12]=e3
 	e3:SetValue(c33700081.limit2)
 	c:RegisterEffect(e3)
 	local e4=e2:Clone()
 	e4:SetCondition(c33700081.effcon3)
 	e4:SetTargetRange(0,LOCATION_HAND)
+	effect_list[21]=e4
 	e4:SetValue(c33700081.limit3)
 	c:RegisterEffect(e4)
 end
@@ -73,14 +78,14 @@ function c33700081.jfilter(c)
 end
 function c33700081.effcon(e)
 	local g=Duel.GetMatchingGroup(c33700081.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=5  or  Duel.IsExistingMatchingCard(c33700081.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=5  or  e:GetLabel()==33700090
 end
 function c33700081.limit(e,re,tp)
 	return  re:IsActiveType(TYPE_MONSTER) and not re:GetHandler():IsImmuneToEffect(e)
 end
 function c33700081.effcon2(e)
 	local g=Duel.GetMatchingGroup(c33700081.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=12  or  Duel.IsExistingMatchingCard(c33700081.jfilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=12  or  e:GetLabel()==33700090
 end
 function c33700081.limit2(e,re,tp)
 	return  re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and not re:GetHandler():IsImmuneToEffect(e)

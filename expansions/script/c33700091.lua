@@ -1,5 +1,7 @@
 --动物朋友 灰狼
 function c33700091.initial_effect(c)
+	c33700091[c]={}
+	local effect_list=c33700091[c]
 	  --tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3841833,0))
@@ -16,6 +18,7 @@ function c33700091.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	effect_list[3]=e2
 	e2:SetCondition(c33700091.con)
 	e2:SetTarget(c33700091.tg)
 	e2:SetOperation(c33700091.op)
@@ -64,7 +67,7 @@ function c33700091.confilter(c)
 end
 function c33700091.con(e,tp,eg,ep,ev,re,r,rp)
 	  local g=Duel.GetMatchingGroup(c33700091.confilter,tp,LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetCode)>=3  or Duel.IsExistingMatchingCard(c33700091.jfilter,tp,LOCATION_SZONE,0,1,nil)
+	return g:GetClassCount(Card.GetCode)>=3  or e:GetLabel()==33700090
 end
 function c33700091.tg(e,tp,eg,ep,ev,re,r,rp,chk)
    local g=Duel.GetMatchingGroup(c33700091.confilter,tp,LOCATION_GRAVE,0,nil) 
@@ -91,14 +94,14 @@ function c33700091.hfilter(c)
 end
 function c33700091.op(e,tp,eg,ep,ev,re,r,rp)
    local g=Duel.GetMatchingGroup(c33700091.confilter,tp,LOCATION_GRAVE,0,nil) 
-   if g:GetClassCount(Card.GetCode)>=3  or Duel.IsExistingMatchingCard(c33700091.jfilter,tp,LOCATION_SZONE,0,1,nil) then
+   if g:GetClassCount(Card.GetCode)>=3  or e:GetLabel()==33700090 then
 	local tg=Duel.SelectMatchingCard(tp,c33700091.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	if tg:GetCount()>0 then
 		Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tg)
 end
 end
-   if g:GetClassCount(Card.GetCode)>=7  or  Duel.IsExistingMatchingCard(c33700091.jfilter,tp,LOCATION_SZONE,0,1,nil) and Duel.IsExistingMatchingCard(c33700091.sgfilter,tp,LOCATION_HAND,0,1,nil,tp) and not Duel.IsExistingMatchingCard(c33700091.cfilter,tp,LOCATION_HAND,0,1,nil) 
+   if g:GetClassCount(Card.GetCode)>=7  or  e:GetLabel()==33700090 and Duel.IsExistingMatchingCard(c33700091.sgfilter,tp,LOCATION_HAND,0,1,nil,tp) and not Duel.IsExistingMatchingCard(c33700091.cfilter,tp,LOCATION_HAND,0,1,nil) 
    then 
 	local fg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	Duel.ConfirmCards(1-tp,fg)
