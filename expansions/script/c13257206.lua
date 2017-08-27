@@ -57,6 +57,7 @@ function c13257206.initial_effect(c)
 	c:RegisterEffect(e7)
 	local e8=e7:Clone()
 	e8:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e8:SetCondition(c13257206.damcon2)
 	c:RegisterEffect(e8)
 	local e12=Effect.CreateEffect(c)
 	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -109,8 +110,10 @@ function c13257206.cfilter(c,tp)
 	return c:GetSummonPlayer()==tp
 end
 function c13257206.damcon1(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return eg:IsExists(c13257206.cfilter,1,nil,1-tp) or ep~=tp
+	return eg:IsExists(c13257206.cfilter,1,nil,1-tp)
+end
+function c13257206.damcon2(e,tp,eg,ep,ev,re,r,rp)
+	return rp~=tp
 end
 function c13257206.bgmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(11,0,aux.Stringid(13257206,4))
